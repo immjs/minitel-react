@@ -54,6 +54,7 @@ export class Minitel extends Container {
         return outputString.join('');
     }
     renderToStream() {
+        this.stream.write('\x0c')
         this.stream.write(this.renderString());
     }
     minitel(): Minitel {

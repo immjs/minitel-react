@@ -1,5 +1,5 @@
 {
-  "name": "react-minitel",
+  "name": "minitel-react",
   "version": "1.0.0",
   "description": "A react renderer for the french Minitel",
   "main": "dist/index.js",
