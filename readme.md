@@ -26,6 +26,7 @@ function App() {
     );
 }
 
+render(<App/>, new Minitel(serialport));
 ```
 
 ## Reference
