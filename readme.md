@@ -55,7 +55,7 @@ render(<App/>, new Minitel(serialport));
 |7         |White  |100%      |
 
 #### On the sizeCode
-*(it's dumb, i'll change it later)*
+*(it's dumb, i'll change it later; also it's not working yet)*
 |Size code |Double height?|Double width?|
 |----------|--------------|-------------|
 |0         |No            |No           |
