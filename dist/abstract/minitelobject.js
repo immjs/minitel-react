@@ -37,5 +37,4 @@ MinitelObject.defaultAttributes = {
     widthAlign: 'start',
     heightAlign: 'start',
     wrap: 'clip',
-    gap: 0,
 };

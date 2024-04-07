@@ -7,7 +7,7 @@ export class YJoin extends MinitelObject {
         super(children, attributes);
     }
     render(inheritedAttributes, forcedAttributes) {
-        const attributes = Object.assign(Object.assign(Object.assign(Object.assign({}, MinitelObject.defaultAttributes), inheritedAttributes), this.attributes), forcedAttributes);
+        const attributes = Object.assign(Object.assign(Object.assign(Object.assign({}, YJoin.defaultAttributes), inheritedAttributes), this.attributes), forcedAttributes);
         const fillChar = new RichChar(attributes.fillChar, attributes).noSize();
         const renders = this.children.map((v) => v.render(inheritedProps(attributes)));
         const result = new RichCharGrid();
@@ -51,3 +51,4 @@ export class YJoin extends MinitelObject {
         return result;
     }
 }
+YJoin.defaultAttributes = Object.assign(Object.assign({}, MinitelObject.defaultAttributes), { gap: 0 });

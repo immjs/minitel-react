@@ -1,4 +1,6 @@
 /// <reference types="react" />
+import { XJoinAttributes } from "./components/xjoin.js";
+import { YJoinAttributes } from "./components/yjoin.js";
 export interface CharAttributes {
     fg: number;
     bg: number;
@@ -16,16 +18,19 @@ export interface MinitelObjectAttributes extends Partial<CharAttributes> {
     width: number | null;
     height: number | null;
     wrap: 'clip' | 'word-wrap' | 'word-break';
-    gap: number | 'space-between' | 'space-around' | 'space-evenly';
 }
 export interface RenderLinesAttributes extends MinitelObjectAttributes {
     forcedIndent?: number;
 }
-type MiniProps = Partial<MinitelObjectAttributes & {
+type MiniProps<T> = Partial<T & {
     children: React.ReactNode | React.ReactNode[];
 }>;
-type MiniElements = 'yjoin' | 'xjoin' | 'para';
-type MiniElementsWithProps = Record<MiniElements, MiniProps>;
+type MiniElementsWithProps = {
+    xjoin: MiniProps<XJoinAttributes>;
+    yjoin: MiniProps<YJoinAttributes>;
+    para: MiniProps<MinitelObjectAttributes>;
+    cont: MiniProps<MinitelObjectAttributes>;
+};
 declare module "react/jsx-runtime" {
     namespace JSX {
         interface IntrinsicElements extends MiniElementsWithProps {
