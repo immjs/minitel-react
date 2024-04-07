@@ -59,6 +59,11 @@ export class RichChar {
         if (codeps) codeps.forEach((char) => this.addCodep(char));
         this.attributes = RichChar.normalizeAttributes(attributes);
     }
+    isEqual(that: RichChar) {
+        return this.char === that.char
+            && (Object.keys(RichChar.normalizeAttributes(this.attributes)) as (keyof CharAttributes)[])
+                .every((attribute) => that.attributes[attribute] === this.attributes[attribute])
+    }
     copy() {
         return new RichChar(this.char, this.attributes, [...this.codependencies]);
     }

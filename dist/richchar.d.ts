@@ -7,6 +7,7 @@ export declare class RichChar {
     static getAttributesApplier(attributes: Partial<CharAttributes>, previousAttributes: CharAttributes): string;
     attributesDiff(attributes: CharAttributes): CharAttributes;
     constructor(char: string, attributes?: Partial<CharAttributes>, codeps?: RichChar[]);
+    isEqual(that: RichChar): boolean;
     copy(): RichChar;
     addCodep(codep: RichChar): void;
     noSize(): RichChar;

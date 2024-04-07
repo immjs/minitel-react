@@ -6,18 +6,20 @@ import React from 'react';
 const wss = new WebSocketServer({ port: 8080 });
 
 function App() {
-    const [stuff, setStuff] = React.useState(0);
+    const [stuff, setStuff] = React.useState(1);
     React.useEffect(() => {
-        setInterval(() => setStuff(s => s + 10), 10_000);
+        setInterval(() => setStuff(s => s + 0.5), 50);
     }, []);
     return (
-        <yjoin widthAlign="start" heightAlign="middle" fg={5} invert gap='space-between'>
-            <para doubleWidth doubleHeight>
-                Running for {stuff} secs
+        <yjoin widthAlign="middle" heightAlign="middle">
+            <para bg={6} fg={0}>
+                {` ${(stuff / 10).toFixed(2)} `}
             </para>
-            <para>
-                {App.toString()}
-            </para>
+            <yjoin width={40}>
+                <para>
+                    {App.toString()}
+                </para>
+            </yjoin>
         </yjoin>
     );
 };

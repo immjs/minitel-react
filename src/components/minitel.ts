@@ -25,6 +25,7 @@ export class Minitel extends Container {
         this.children = new SingletonArray<MinitelObject>();
         this.stream = stream;
         this.previousRender = RichCharGrid.fill(40, 24, new RichChar(' '));
+        this.stream.write('\x0c');
 
         // TBD.
         // this.rxQueue = new FifoQueue();
@@ -48,18 +49,42 @@ export class Minitel extends Container {
             noBlink: true,
             invert: false,
         };
-        for (let line of renderGrid.grid) {
-            for (let char of line) {
-                const diff = char.attributesDiff(lastAttributes);
-                const applier = RichChar.getAttributesApplier(diff, lastAttributes);
-                if (applier != '') {
-                    outputString.push(applier);
+        let skippedACharCounter = 0;
+        for (let lineIdx in renderGrid.grid) {
+            const line = renderGrid.grid[lineIdx];
+            for (let charIdx in line) {
+                const char = line[charIdx];
+                const prevChar = this.previousRender.grid[lineIdx][charIdx];
+                if (this.previousRender.grid[lineIdx][charIdx].isEqual(char)) {
+                    if (char.char !== '') skippedACharCounter += 1;
+                } else {
+                    if (skippedACharCounter === 0) {
+                        const diff = char.attributesDiff(lastAttributes);
+                        const applier = RichChar.getAttributesApplier(diff, lastAttributes);
+                        if (applier != '') {
+                            outputString.push(applier);
+                        }
+                        lastAttributes = char.attributes;
+                    } else {
+                        outputString.push([
+                            '\x1f',
+                            String.fromCharCode(64 + +lineIdx + 1),
+                            String.fromCharCode(64 + +charIdx + 1),
+                        ].join(''));
+                        const diff = char.attributesDiff(lastAttributes);
+                        const applier = RichChar.getAttributesApplier(diff, lastAttributes);
+                        if (applier != '') {
+                            outputString.push(applier);
+                        }
+                    }
+
+                    outputString.push(char.char)
+                    skippedACharCounter = 0;
                 }
-                outputString.push(char.char)
-                lastAttributes = char.attributes;
             }
             if (lastAttributes.doubleHeight) outputString.push('\x0b');
         }
+        this.previousRender = renderGrid.copy();
         // if i get bullied in prépa, it will be because of this
         let preOptimized = outputString.join('\x80');
         preOptimized = preOptimized.replace(
@@ -70,7 +95,7 @@ export class Minitel extends Container {
         return preOptimized.split('\x80').join('');
     }
     renderToStream() {
-        this.stream.write('\x0c')
+        // this.stream.write('\x0c');
         this.stream.write(this.renderString());
     }
     minitel(): Minitel {

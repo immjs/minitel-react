@@ -93,6 +93,7 @@ export class RichCharGrid {
         return this;
     }
     cutHeight(height, heightAlign) {
+        const prevHeight = this.height;
         const cutAmount = this.height - height;
         switch (heightAlign) {
             case 'start':
@@ -102,9 +103,8 @@ export class RichCharGrid {
                 return this;
             case 'middle':
                 const topToMiddle = Math.floor(cutAmount / 2);
-                const middleToBottom = cutAmount - topToMiddle;
-                this.cutHeight(topToMiddle, 'start');
-                this.cutHeight(middleToBottom, 'end');
+                this.cutHeight(prevHeight - topToMiddle, 'start');
+                this.cutHeight(height, 'end');
                 return this;
         }
     }
@@ -119,9 +119,8 @@ export class RichCharGrid {
                 return this;
             case 'middle':
                 const leftToMiddle = Math.floor(cutAmount / 2);
-                const middleToRight = cutAmount - leftToMiddle;
                 this.cutWidth(prevWidth - leftToMiddle, 'start');
-                this.cutWidth(prevWidth - middleToRight, 'end');
+                this.cutWidth(width, 'end');
                 return this;
         }
     }
@@ -168,7 +167,8 @@ export class RichCharGrid {
     mergeY(operand, heightAlign = 'end') {
         if (operand.height === 0)
             return;
-        if (operand.width !== this.width && this.height !== 0) {
+        if (operand.width !== this.width && this.height !== 0 && operand.height !== 0) {
+            console.log(this.toString(), operand.toString());
             throw new Error('Width is not shared between the two operands');
         }
         switch (heightAlign) {
@@ -187,7 +187,7 @@ export class RichCharGrid {
     mergeX(operand, widthAlign = 'end') {
         if (operand.width === 0)
             return;
-        if (operand.height !== this.height && this.width !== 0) {
+        if (operand.height !== this.height && this.width !== 0 && operand.height !== 0) {
             throw new Error('Height is not shared between the two operands');
         }
         switch (widthAlign) {
