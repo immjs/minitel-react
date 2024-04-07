@@ -18,7 +18,7 @@ export class Container extends MinitelObject {
             ...this.attributes,
             ...forcedAttributes,
         };
-        const fillChar = new RichChar(attributes.fillChar, attributes);
+        const fillChar = new RichChar(attributes.fillChar, attributes).noSize();
 
         const render = this.children[0].render(inheritedProps(attributes), {});
 

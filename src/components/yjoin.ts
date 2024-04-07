@@ -15,7 +15,7 @@ export class YJoin extends MinitelObject {
             ...this.attributes,
             ...forcedAttributes,
         };
-        const fillChar = new RichChar(attributes.fillChar, attributes);
+        const fillChar = new RichChar(attributes.fillChar, attributes).noSize();
 
         const renders = this.children.map((v) => v.render(inheritedProps(attributes)));
 
@@ -25,8 +25,36 @@ export class YJoin extends MinitelObject {
 
         if (renders.length === 0) return RichCharGrid.fill(attributes.width || 0, attributes.height || 0, fillChar);
         
+        const contentsHeight = renders.reduce((c, v) => c + v.height, 0);
+        // space-between: w / (n - 1)
+        // space-around: w / n
+        // space-evenly: w / (n + 1)
+        let gapHeight: number;
+        if (typeof attributes.gap === 'number') {
+            gapHeight = attributes.gap;
+        } else if (attributes.height != null) {
+            const mappingTable = {
+                'space-between': renders.length - 1,
+                'space-around': renders.length,
+                'space-evenly': renders.length + 1,
+            };
+            gapHeight = (attributes.height - contentsHeight) / mappingTable[attributes.gap];
+        } else {
+            gapHeight = 0;
+        }
+
+        let gapCumul = 0;
+
         for (let render of renders) {
-            render.setWidth(width, alignInvrt[attributes.widthAlign], fillChar)
+            render.setWidth(width, alignInvrt[attributes.widthAlign], fillChar);
+            if (render !== renders[0]) {
+                const gapConstituent = new RichCharGrid([[]]);
+                const lastCumul = gapCumul;
+                gapCumul += gapHeight;
+                gapConstituent.setHeight(Math.round(gapCumul - lastCumul), 'end', fillChar);
+                gapConstituent.setWidth(width, 'end', fillChar);
+                result.mergeY(gapConstituent);
+            }
             result.mergeY(render);
         } 
         if (attributes.height != null) result.setHeight(attributes.height, alignInvrt[attributes.heightAlign], fillChar);

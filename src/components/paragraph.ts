@@ -3,7 +3,7 @@ import { RichChar } from '../richchar.js';
 import { RichCharGrid } from '../richchargrid.js';
 import { MinitelObjectAttributes } from '../types.js';
 import { alignInvrt, inheritedProps } from '../utils.js';
-import { TextNode } from './textnode.js';
+import { TextNode } from '../abstract/textnode.js';
 
 export class Paragraph extends MinitelObject {
     children: TextNode[];
@@ -22,20 +22,24 @@ export class Paragraph extends MinitelObject {
             ...this.attributes,
             ...forcedAttributes,
         };
-        const fillChar = new RichChar(attributes.fillChar, attributes);
+        const fillChar = new RichChar(attributes.fillChar, attributes).noSize();
         const lines = [new RichCharGrid([[]])];
         for (let child of this.children) {
             const render = child.renderLines(inheritedProps(attributes), {
                 width: attributes.width,
                 forcedIndent: lines.at(-1)!.width,
             });
-            const prevMaxIdx = lines.length - 1;
+            const newMaxIdx = lines.length - 1;
+            // let cumulatedLines = 0;
             for (let lineIdx in render) {
-                if (+lineIdx > 0) lines[prevMaxIdx + +lineIdx] = new RichCharGrid([[]]);
-                lines[prevMaxIdx + +lineIdx].mergeX(render[+lineIdx], 'end');
+                if (+lineIdx !== 0) {
+                    console.log('Reached!', lineIdx, render[lineIdx].toString());
+                    lines[newMaxIdx + +lineIdx] = new RichCharGrid([[]]);
+                }
+                lines[newMaxIdx + +lineIdx].mergeX(render[+lineIdx], 'end');
             }
         }
-        
+
         const width = attributes.width || Math.max(...lines.map((v) => v.width));
         const result = new RichCharGrid([]);
 
@@ -43,6 +47,7 @@ export class Paragraph extends MinitelObject {
             line.setWidth(width, alignInvrt[attributes.widthAlign], fillChar);
             result.mergeY(line);
         }
+        console.log(result.toString());
         if (attributes.height) {
             result.setHeight(attributes.height, alignInvrt[attributes.heightAlign], fillChar);
         }

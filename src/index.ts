@@ -5,7 +5,7 @@ import { XJoin } from './components/xjoin.js';
 import { MinitelObjectAttributes } from './types.js';
 import { Minitel } from './components/minitel.js';
 import { MinitelObject } from './abstract/minitelobject.js';
-import { TextNode } from './components/textnode.js';
+import { TextNode } from './abstract/textnode.js';
 
 import {
     DiscreteEventPriority,
@@ -18,6 +18,8 @@ const elements = {
     yjoin: YJoin,
     xjoin: XJoin,
 };
+
+let lastImmediate: NodeJS.Immediate | null = null;
 
 const MiniRenderer = Reconciler<
     keyof typeof elements,
@@ -73,14 +75,23 @@ const MiniRenderer = Reconciler<
         return {};
     },
     commitUpdate(instance) {
-        instance.minitel().renderToStream();
+        // its so dirty i love it haha
+        if (lastImmediate != null) clearImmediate(lastImmediate);
+        lastImmediate = setImmediate(() => {
+            instance.minitel().renderToStream();
+            lastImmediate = null;
+        });
     },
     clearContainer(container) {
         if (container.children[0]) container.removeChild(container.children[0]);
     },
     finalizeInitialChildren: () => true,
     commitMount(instance) {
-        instance.minitel().renderToStream();
+        if (lastImmediate != null) clearImmediate(lastImmediate);
+        lastImmediate = setImmediate(() => {
+            instance.minitel().renderToStream();
+            lastImmediate = null;
+        });
     },
     shouldSetTextContent: () => false,
     getRootHostContext: () => null,

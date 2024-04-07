@@ -13,7 +13,7 @@ export class Container extends MinitelObject {
     }
     render(inheritedAttributes, forcedAttributes) {
         const attributes = Object.assign(Object.assign(Object.assign(Object.assign({}, MinitelObject.defaultAttributes), inheritedAttributes), this.attributes), forcedAttributes);
-        const fillChar = new RichChar(attributes.fillChar, attributes);
+        const fillChar = new RichChar(attributes.fillChar, attributes).noSize();
         const render = this.children[0].render(inheritedProps(attributes), {});
         if (attributes.width)
             render.setWidth(attributes.width, alignInvrt[attributes.widthAlign], fillChar);

@@ -13,6 +13,7 @@ export class MinitelObject {
         widthAlign: 'start',
         heightAlign: 'start',
         wrap: 'clip',
+        gap: 0,
     };
     constructor(children: MinitelObject[] = [], attributes: Partial<MinitelObjectAttributes> = {}) {
         this.children = [];

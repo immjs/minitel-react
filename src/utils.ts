@@ -7,7 +7,7 @@ export const alignInvrt: Record<Align, Align> = {
 };
 
 export function inheritedProps (props: Partial<MinitelObjectAttributes>) {
-    const inheritedProps = ['fillChar', 'fg', 'bg', 'underline', 'noBlink', 'invert'] as const;
+    const inheritedProps = ['fillChar', 'fg', 'bg', 'underline', 'noBlink', 'invert', 'doubleWidth', 'doubleHeight'] as const;
     const result: Partial<MinitelObjectAttributes> = {};
 
     let inheritedProp: keyof MinitelObjectAttributes;

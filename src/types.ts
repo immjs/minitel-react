@@ -2,7 +2,8 @@ export interface CharAttributes {
     fg: number;
     bg: number;
     underline: boolean;
-    sizeCode: number;
+    doubleHeight: boolean;
+    doubleWidth: boolean;
     noBlink: boolean;
     invert: boolean;
 }
@@ -14,6 +15,7 @@ export interface MinitelObjectAttributes extends Partial<CharAttributes> {
     width: number | null;
     height: number | null;
     wrap: 'clip' | 'word-wrap' | 'word-break';
+    gap: number | 'space-between' | 'space-around' | 'space-evenly';
 }
 export interface RenderLinesAttributes extends MinitelObjectAttributes {
     forcedIndent?: number;

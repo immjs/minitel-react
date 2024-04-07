@@ -33,14 +33,16 @@ render(<App/>, new Minitel(serialport));
 
 ### CharAttributes
 
-|Attribute  |Type     |Default|Description                     |
-|-----------|---------|-------|--------------------------------|
-|fg         |`number` |7      |The foreground color to be used |
-|bg         |`number` |0      |The background color to be used |
-|underline  |`boolean`|false  |Whether to underline or not     |
-|sizeCode   |`number` |0      |The size code to be used        |
-|noBlink    |`boolean`|true   |Whether to not blink or to blink|
-|invert     |`boolean`|true   |Whether to invert or not        |
+|Attribute   |Type     |Default|Description                        |
+|------------|---------|-------|-----------------------------------|
+|fg          |`number` |7      |The foreground color to be used    |
+|bg          |`number` |0      |The background color to be used    |
+|underline   |`boolean`|false  |Whether to underline or not        |
+|sizeCode    |`number` |0      |The size code to be used           |
+|noBlink     |`boolean`|true   |Whether to not blink or to blink   |
+|invert      |`boolean`|true   |Whether to invert or not           |
+|doubleWidth |`boolean`|true   |Whether to use double width or not |
+|doubleHeight|`boolean`|true   |Whether to use double height or not|
 
 #### On colors
 |Color code|Color  |Brightness|
@@ -54,24 +56,16 @@ render(<App/>, new Minitel(serialport));
 |6         |Cyan   |80%       |
 |7         |White  |100%      |
 
-#### On the sizeCode
-*(it's dumb, i'll change it later; also it's not working yet)*
-|Size code |Double height?|Double width?|
-|----------|--------------|-------------|
-|0         |No            |No           |
-|1         |Yes           |No           |
-|2         |No            |Yes          |
-|3         |Yes           |Yes          |
-
 ### MinitelObjectAttributes
-|Attribute  |Type    |Description                                                                         |
-|-----------|--------|------------------------------------------------------------------------------------|
-|fillChar   |`string`|The character to fill holes with (can be useful for transparency)                   |
-|widthAlign |`string`|The way to align along the x axis (start for left, middle for middle, end for right)|
-|heightAlign|`string`|The way to align along the y axis (start for top, middle for middle, end for bottom)|
-|width      |`number`|The desired width of the element                                                    |
-|height     |`number`|The desired height of the element                                                   |
-|wrap       |`string`|The behaviour of text overflowing                                                   |
+|Attribute            |Type                  |Description                                                                             |
+|---------------------|----------------------|----------------------------------------------------------------------------------------|
+|* from CharAttributes|`CharAttributes[k]`   |The properties to pass to the underlying characters. Will not apply to fillChar for size|
+|fillChar             |`string`              |The character to fill holes with (can be useful for transparency)                       |
+|widthAlign           |`string`              |The way to align along the x axis (start for left, middle for middle, end for right)    |
+|heightAlign          |`string`              |The way to align along the y axis (start for top, middle for middle, end for bottom)    |
+|width                |`number`              |The desired width of the element                                                        |
+|height               |`number`              |The desired height of the element                                                       |
+|wrap                 |`string`              |The behaviour of text overflowing                                                       |
 
 
 ### vjoin

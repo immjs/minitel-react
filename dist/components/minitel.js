@@ -18,29 +18,31 @@ export class Minitel extends Container {
         });
         renderGrid.setHeight(24, 'start', new RichChar(' '));
         renderGrid.setWidth(40, 'start', new RichChar(' '));
+        console.log('RG', renderGrid.toString());
         const outputString = [];
         let lastAttributes = {
             fg: 7,
             bg: 0,
             underline: false,
-            sizeCode: 0,
+            doubleWidth: false,
+            doubleHeight: false,
             noBlink: true,
             invert: false,
         };
         for (let line of renderGrid.grid) {
             for (let char of line) {
                 const diff = char.attributesDiff(lastAttributes);
-                const applier = RichChar.getAttributesApplier(diff);
+                const applier = RichChar.getAttributesApplier(diff, lastAttributes);
                 if (applier != '') {
                     outputString.push(applier);
-                    if (char.char !== ' ')
-                        outputString.push(' \x08');
                 }
                 outputString.push(char.char);
                 lastAttributes = char.attributes;
             }
-            // outputString.push('\r\n');
+            if (lastAttributes.doubleHeight)
+                outputString.push('\x0b');
         }
+        // console.log('txt', JSON.stringify(outputString));
         return outputString.join('');
     }
     renderToStream() {

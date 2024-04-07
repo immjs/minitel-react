@@ -1,16 +1,16 @@
 import { RichChar } from './richchar.js';
-import { Align, CharAttributes, MinitelObjectAttributes } from './types.js';
+import { Align, CharAttributes } from './types.js';
 export declare class RichCharGrid {
     grid: RichChar[][];
     constructor(grid?: RichChar[][]);
     static fromLine(line: string | string[], attributes: Partial<CharAttributes>): RichCharGrid;
-    static from(string: string, attributes: MinitelObjectAttributes): RichCharGrid;
     static fill(w: number, h: number, char: RichChar): RichCharGrid;
     get width(): number;
     get height(): number;
     copy(): RichCharGrid;
     copyLine(index: number): RichChar[][];
     copyCol(index: number): RichChar[][];
+    pad(arg: number | [number, number] | [number, number, number, number], fillChar: RichChar): this;
     cutHeight(height: number, heightAlign: Align): this;
     cutWidth(width: number, widthAlign: Align): this;
     setHeight(height: number, heightAlign: Align, char?: RichChar): this;

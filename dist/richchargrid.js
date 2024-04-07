@@ -6,18 +6,25 @@ export class RichCharGrid {
     }
     static fromLine(line, attributes) {
         const result = new RichCharGrid([[]]);
+        const allNewChars = [];
         for (let char of line) {
-            result.mergeX(new RichCharGrid([[new RichChar(char, attributes)]]));
+            const newChar = new RichChar(char, attributes);
+            allNewChars.push(newChar);
+            const emptyCodepdChar = new RichChar('', attributes);
+            emptyCodepdChar.addCodep(newChar);
+            result.mergeX(new RichCharGrid(attributes.doubleWidth
+                ? [[newChar, emptyCodepdChar]]
+                : [[newChar]]));
         }
-        return result;
-    }
-    static from(string, attributes) {
-        const result = new RichCharGrid();
-        const lines = string.split(/\r?\n/g);
-        const width = Math.max(...lines.map((v) => v.length));
-        const fillChar = new RichChar(attributes.fillChar, attributes);
-        for (let line of lines) {
-            result.mergeY(RichCharGrid.fromLine(line, attributes).setWidth(width, attributes.widthAlign, fillChar));
+        if (attributes.doubleHeight) {
+            const xScalingFactor = attributes.doubleWidth ? 2 : 1;
+            const newLine = new RichCharGrid([[]]);
+            for (let newChar of allNewChars) {
+                const emptyCodepdChar = new RichChar(' ', attributes).noSize();
+                newChar.addCodep(emptyCodepdChar);
+                newLine.mergeX(RichCharGrid.fill(xScalingFactor, 1, emptyCodepdChar));
+            }
+            result.mergeY(newLine, 'start');
         }
         return result;
     }
@@ -51,6 +58,22 @@ export class RichCharGrid {
     copyCol(index) {
         return this.grid.map((char) => [char[index].copy()]);
     }
+    pad(arg, fillChar) {
+        var _a, _b;
+        let pad; // URDL
+        if (typeof arg === 'number') {
+            pad = [arg, arg, arg, arg];
+        }
+        else {
+            pad = [arg[0], arg[1], (_a = arg[2]) !== null && _a !== void 0 ? _a : arg[0], (_b = arg[3]) !== null && _b !== void 0 ? _b : arg[1]];
+        }
+        const safeFillChar = fillChar.noSize();
+        this.setHeight(this.height + pad[0], 'start', safeFillChar);
+        this.setWidth(this.width + pad[1], 'end', safeFillChar);
+        this.setHeight(this.height + pad[2], 'end', safeFillChar);
+        this.setWidth(this.width + pad[3], 'start', safeFillChar);
+        return this;
+    }
     cutHeight(height, heightAlign) {
         const cutAmount = this.height - height;
         switch (heightAlign) {
@@ -75,6 +98,7 @@ export class RichCharGrid {
             case 'end':
                 const cutStart = { start: 0, end: width }[widthAlign];
                 this.grid.forEach((line) => line.splice(cutStart, cutAmount));
+                console.log(this.toString());
                 return this;
             case 'middle':
                 const leftToMiddle = Math.floor(cutAmount / 2);
@@ -174,7 +198,7 @@ export class RichCharGrid {
         return `=====RICHCHARGRID=====
 Width: ${this.width}
 Height: ${this.height}
-${this.grid.map((line) => line.map(({ char }) => char).join('')).join('\n')}
+${this.grid.map((line) => `|${line.map(({ char }) => char === '' ? '_' : char).join('')}/`).join('\n')}
 =====END RICHCHARGRID=====`;
     }
 }

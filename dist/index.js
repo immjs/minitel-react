@@ -13,13 +13,14 @@ import Reconciler from 'react-reconciler';
 import { Paragraph } from './components/paragraph.js';
 import { YJoin } from './components/yjoin.js';
 import { XJoin } from './components/xjoin.js';
-import { TextNode } from './components/textnode.js';
+import { TextNode } from './abstract/textnode.js';
 import { DefaultEventPriority, } from 'react-reconciler/constants.js';
 const elements = {
     para: Paragraph,
     yjoin: YJoin,
     xjoin: XJoin,
 };
+let lastImmediate = null;
 const MiniRenderer = Reconciler({
     supportsMutation: true,
     supportsHydration: false,
@@ -58,7 +59,13 @@ const MiniRenderer = Reconciler({
         return {};
     },
     commitUpdate(instance) {
-        instance.minitel().renderToStream();
+        // its so dirty i love it haha
+        if (lastImmediate != null)
+            clearImmediate(lastImmediate);
+        lastImmediate = setImmediate(() => {
+            instance.minitel().renderToStream();
+            lastImmediate = null;
+        });
     },
     clearContainer(container) {
         if (container.children[0])
@@ -66,7 +73,12 @@ const MiniRenderer = Reconciler({
     },
     finalizeInitialChildren: () => true,
     commitMount(instance) {
-        instance.minitel().renderToStream();
+        if (lastImmediate != null)
+            clearImmediate(lastImmediate);
+        lastImmediate = setImmediate(() => {
+            instance.minitel().renderToStream();
+            lastImmediate = null;
+        });
     },
     shouldSetTextContent: () => false,
     getRootHostContext: () => null,

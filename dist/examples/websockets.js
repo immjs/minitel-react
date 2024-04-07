@@ -8,7 +8,7 @@ function App() {
     React.useEffect(() => {
         setInterval(() => setStuff(s => s + 10), 10000);
     }, []);
-    return (_jsx("yjoin", { widthAlign: "start", heightAlign: "middle", invert: true, fg: 5, children: _jsxs("para", { children: ["Running for ", stuff, " seconds with code:", '\n', App.toString()] }) }));
+    return (_jsxs("yjoin", { widthAlign: "start", heightAlign: "middle", invert: true, fg: 5, gap: 'space-between', children: [_jsx("xjoin", { children: _jsxs("para", { doubleWidth: true, doubleHeight: true, children: ["Running for ", stuff, " secs"] }) }), _jsx("para", { children: App.toString() })] }));
 }
 ;
 wss.on('connection', function connection(ws) {
