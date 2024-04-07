@@ -28,18 +28,6 @@ export class Minitel extends Container {
             noBlink: true,
             invert: false,
         };
-        for (const attribute of ['fg', 'noBlink', 'invert']) {
-            const mostCommonAttribute = renderGrid.mostCommonAttribute(attribute);
-            if (lastAttributes[attribute] !== mostCommonAttribute) {
-                outputString.push(`\x1b\x23\x20${RichChar.getAttributesApplier({
-                    [attribute]: mostCommonAttribute,
-                }, lastAttributes)}`);
-                // @ts-ignore
-                lastAttributes[attribute] = mostCommonAttribute;
-            }
-        }
-        console.log(lastAttributes);
-        // const screenAttributes = { ...lastAttributes };
         for (let line of renderGrid.grid) {
             for (let char of line) {
                 const diff = char.attributesDiff(lastAttributes);

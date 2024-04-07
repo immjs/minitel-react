@@ -4,6 +4,24 @@ export class RichCharGrid {
         this.grid = grid;
         this.width; // run check on getter
     }
+    mostCommonAttribute(attribute) {
+        const results = new Map();
+        for (const line of this.grid) {
+            for (const char of line) {
+                const value = char.attributes[attribute];
+                results.set(value, (results.get(value) || 0) + 1);
+            }
+        }
+        let maxCount = -Infinity;
+        let maxValue = null;
+        for (let [value, count] of results.entries()) {
+            if (count > maxCount) {
+                maxValue = value;
+                maxCount = count;
+            }
+        }
+        return maxValue;
+    }
     static fromLine(line, attributes) {
         const result = new RichCharGrid([[]]);
         const allNewChars = [];
