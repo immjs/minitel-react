@@ -48,7 +48,6 @@ export class XJoin extends MinitelObject {
         for (let render of renders) {
             render.setHeight(height, alignInvrt[attributes.heightAlign], fillChar);
             if (render !== renders[0]) {
-                console.log('AYO', render.toString(), renders)
                 const gapConstituent = new RichCharGrid([]);
                 const lastCumul = gapCumul;
                 gapCumul += gapWidth;
@@ -58,9 +57,7 @@ export class XJoin extends MinitelObject {
             }
             result.mergeX(render);
         }
-        console.log(result.toString());
         if (attributes.width != null) result.setWidth(attributes.width, alignInvrt[attributes.widthAlign], fillChar);
-        console.log(result.toString());
         return result;
     }
 }

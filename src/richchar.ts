@@ -37,7 +37,6 @@ export class RichChar {
         if ('doubleHeight' in attributes || 'doubleWidth' in attributes) {
             const doubleWidth = attributes.doubleWidth ?? previousAttributes.doubleWidth;
             const doubleHeight = attributes.doubleHeight ?? previousAttributes.doubleHeight;
-            // console.log('AYO!!');
             result.push(`\x1b${String.fromCharCode([[0x4c, 0x4d], [0x4e, 0x4f]][+doubleWidth][+doubleHeight])}`);
         }
         return result.join('');
@@ -55,11 +54,9 @@ export class RichChar {
         return result;
     }
     constructor(char: string, attributes: Partial<CharAttributes> = {}, codeps?: RichChar[]) {
-        // this.skip = skip;
         this.char = char;
         this.codependencies = new Set();
         if (codeps) codeps.forEach((char) => this.addCodep(char));
-        // if (attributes.doubleWidth) console.log('aye')
         this.attributes = RichChar.normalizeAttributes(attributes);
     }
     copy() {
