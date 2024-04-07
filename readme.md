@@ -59,7 +59,7 @@ render(<App/>, new Minitel(serialport));
 ### MinitelObjectAttributes
 |Attribute              |Type                  |Description                                                                             |
 |-----------------------|----------------------|----------------------------------------------------------------------------------------|
-|All from CharAttributes|`CharAttributes[k]`   |The properties to pass to the underlying characters. Will not apply to fillChar for size|
+|All from CharAttributes|`CharAttributes[k]`   |The properties to pass to the underlying characters. Will not apply to fillChar for size attributes (doubleWidth, doubleHeight)|
 |fillChar               |`string`              |The character to fill holes with (can be useful for transparency)                       |
 |widthAlign             |`string`              |The way to align along the x axis (start for left, middle for middle, end for right)    |
 |heightAlign            |`string`              |The way to align along the y axis (start for top, middle for middle, end for bottom)    |
@@ -71,14 +71,14 @@ render(<App/>, new Minitel(serialport));
 
 ### &lt;vjoin&gt;
 Will vertically join all children
-|Attribute            |Type                  |Description                                                                                                   |
-|---------------------|----------------------|--------------------------------------------------------------------------------------------------------------|
-|gap                  |`number` or `string`  |The amount of gap to be had. Can be a number or space-{between,around,evenly} (refer to flex's justify-center)|
+|Attribute            |Type                  |Description                                                                                                      |
+|---------------------|----------------------|-----------------------------------------------------------------------------------------------------------------|
+|gap                  |`number` or `string`  |The amount of gap to be had. Can be a number or space-{between,around,evenly} (refer to flexbox's justify-center)|
 
 ### &lt;hjoin&gt;
 Will horizontally join all children
-|Attribute            |Type                  |Description                                                                                                   |
-|---------------------|----------------------|--------------------------------------------------------------------------------------------------------------|
+|Attribute            |Type                  |Description                                                                                                      |
+|---------------------|----------------------|-----------------------------------------------------------------------------------------------------------------|
 |gap                  |`number` or `string`  |The amount of gap to be had. Can be a number or space-{between,around,evenly} (refer to flex's justify-center)|
 
 ### &lt;para&gt;
