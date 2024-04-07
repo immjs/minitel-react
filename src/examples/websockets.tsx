@@ -8,12 +8,12 @@ const wss = new WebSocketServer({ port: 8080 });
 function App() {
     const [stuff, setStuff] = React.useState(1);
     React.useEffect(() => {
-        setInterval(() => setStuff(s => s + 0.5), 50);
+        setInterval(() => setStuff(s => s + 1), 100);
     }, []);
     return (
         <yjoin widthAlign="middle" heightAlign="middle">
-            <para bg={6} fg={0}>
-                {` ${(stuff / 10).toFixed(2)} `}
+            <para fg={0} bg={7} underline doubleHeight>
+                {` ${(stuff / 10).toFixed(1)} `}
             </para>
             <yjoin width={40}>
                 <para>

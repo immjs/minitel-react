@@ -5,6 +5,12 @@ export class RichChar {
     char: string;
     codependencies: Set<RichChar>;
     // skip: boolean;
+    static getDelimited(attributes: CharAttributes): Pick<CharAttributes, 'bg' | 'underline'> {
+        return {
+            bg: attributes.bg,
+            underline: attributes.underline,
+        }
+    }
     static normalizeAttributes(attributes: Partial<CharAttributes>): CharAttributes {
         return {
             fg: attributes.fg ?? 7,

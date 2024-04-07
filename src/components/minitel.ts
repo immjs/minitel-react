@@ -54,29 +54,31 @@ export class Minitel extends Container {
             const line = renderGrid.grid[lineIdx];
             for (let charIdx in line) {
                 const char = line[charIdx];
-                const prevChar = this.previousRender.grid[lineIdx][charIdx];
+
                 if (this.previousRender.grid[lineIdx][charIdx].isEqual(char)) {
                     if (char.char !== '') skippedACharCounter += 1;
+                    lastAttributes = {
+                        fg: 7,
+                        doubleWidth: false,
+                        doubleHeight: false,
+                        noBlink: true,
+                        invert: false,
+                        ...RichChar.getDelimited(char.attributes),
+                    };
                 } else {
-                    if (skippedACharCounter === 0) {
-                        const diff = char.attributesDiff(lastAttributes);
-                        const applier = RichChar.getAttributesApplier(diff, lastAttributes);
-                        if (applier != '') {
-                            outputString.push(applier);
-                        }
-                        lastAttributes = char.attributes;
-                    } else {
+                    if (skippedACharCounter !== 0) {
                         outputString.push([
                             '\x1f',
                             String.fromCharCode(64 + +lineIdx + 1),
                             String.fromCharCode(64 + +charIdx + 1),
                         ].join(''));
-                        const diff = char.attributesDiff(lastAttributes);
-                        const applier = RichChar.getAttributesApplier(diff, lastAttributes);
-                        if (applier != '') {
-                            outputString.push(applier);
-                        }
                     }
+                    // outputString.push('\x09'.repeat(skippedACharCounter));
+                    const diff = char.attributesDiff(lastAttributes);
+                    const applier = RichChar.getAttributesApplier(diff, lastAttributes);
+                    outputString.push(applier);
+
+                    lastAttributes = char.attributes;
 
                     outputString.push(char.char)
                     skippedACharCounter = 0;

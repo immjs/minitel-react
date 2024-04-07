@@ -1,5 +1,11 @@
 export class RichChar {
     // skip: boolean;
+    static getDelimited(attributes) {
+        return {
+            bg: attributes.bg,
+            underline: attributes.underline,
+        };
+    }
     static normalizeAttributes(attributes) {
         var _a, _b, _c, _d, _e, _f, _g;
         return {
