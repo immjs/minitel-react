@@ -108,6 +108,7 @@ export class RichCharGrid {
                 const cutStart = { start: 0, end: width }[widthAlign];
 
                 this.grid.forEach((line) => line.splice(cutStart, cutAmount));
+                return this;
             case 'middle':
                 const leftToMiddle = Math.floor(cutAmount / 2);
                 const middleToRight = cutAmount - leftToMiddle;

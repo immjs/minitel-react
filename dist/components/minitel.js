@@ -18,7 +18,6 @@ export class Minitel extends Container {
         });
         renderGrid.setHeight(24, 'start', new RichChar(' '));
         renderGrid.setWidth(40, 'start', new RichChar(' '));
-        console.log('RG', renderGrid.toString());
         const outputString = [];
         let lastAttributes = {
             fg: 7,
@@ -42,7 +41,6 @@ export class Minitel extends Container {
             if (lastAttributes.doubleHeight)
                 outputString.push('\x0b');
         }
-        // console.log('txt', JSON.stringify(outputString));
         return outputString.join('');
     }
     renderToStream() {

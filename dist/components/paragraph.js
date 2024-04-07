@@ -20,10 +20,8 @@ export class Paragraph extends MinitelObject {
                 forcedIndent: lines.at(-1).width,
             });
             const newMaxIdx = lines.length - 1;
-            // let cumulatedLines = 0;
             for (let lineIdx in render) {
                 if (+lineIdx !== 0) {
-                    console.log('Reached!', lineIdx, render[lineIdx].toString());
                     lines[newMaxIdx + +lineIdx] = new RichCharGrid([[]]);
                 }
                 lines[newMaxIdx + +lineIdx].mergeX(render[+lineIdx], 'end');
@@ -35,7 +33,6 @@ export class Paragraph extends MinitelObject {
             line.setWidth(width, alignInvrt[attributes.widthAlign], fillChar);
             result.mergeY(line);
         }
-        console.log(result.toString());
         if (attributes.height) {
             result.setHeight(attributes.height, alignInvrt[attributes.heightAlign], fillChar);
         }
