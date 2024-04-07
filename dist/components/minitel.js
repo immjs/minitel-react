@@ -28,6 +28,18 @@ export class Minitel extends Container {
             noBlink: true,
             invert: false,
         };
+        for (const attribute of ['fg', 'noBlink', 'invert']) {
+            const mostCommonAttribute = renderGrid.mostCommonAttribute(attribute);
+            if (lastAttributes[attribute] !== mostCommonAttribute) {
+                outputString.push(`\x1b\x23\x20${RichChar.getAttributesApplier({
+                    [attribute]: mostCommonAttribute,
+                }, lastAttributes)}`);
+                // @ts-ignore
+                lastAttributes[attribute] = mostCommonAttribute;
+            }
+        }
+        console.log(lastAttributes);
+        // const screenAttributes = { ...lastAttributes };
         for (let line of renderGrid.grid) {
             for (let char of line) {
                 const diff = char.attributesDiff(lastAttributes);
@@ -41,7 +53,11 @@ export class Minitel extends Container {
             if (lastAttributes.doubleHeight)
                 outputString.push('\x0b');
         }
-        return outputString.join('');
+        // if i get bullied in prépa, it will be because of this
+        let preOptimized = outputString.join('\x80');
+        preOptimized = preOptimized.replace(/(.)(€\1){2,62}/g, (v) => `${v[0]}\x12${String.fromCharCode((v.length + 1) / 2 + 63)}`);
+        // console.log(JSON.stringify(preOptimized));
+        return preOptimized.split('\x80').join('');
     }
     renderToStream() {
         this.stream.write('\x0c');
@@ -51,3 +67,12 @@ export class Minitel extends Container {
         return this;
     }
 }
+Minitel.defaultScreenAttributes = {
+    fg: 7,
+    bg: 0,
+    underline: false,
+    doubleWidth: false,
+    doubleHeight: false,
+    noBlink: true,
+    invert: false,
+};

@@ -3,6 +3,7 @@ import { Align, CharAttributes } from './types.js';
 export declare class RichCharGrid {
     grid: RichChar[][];
     constructor(grid?: RichChar[][]);
+    mostCommonAttribute(attribute: 'fg' | 'invert' | 'noBlink'): any;
     static fromLine(line: string | string[], attributes: Partial<CharAttributes>): RichCharGrid;
     static fill(w: number, h: number, char: RichChar): RichCharGrid;
     get width(): number;

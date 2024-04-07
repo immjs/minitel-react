@@ -11,12 +11,10 @@ function App() {
         setInterval(() => setStuff(s => s + 10), 10_000);
     }, []);
     return (
-        <yjoin widthAlign="start" heightAlign="middle" invert fg={5} gap='space-between'>
-            <xjoin>
-                <para doubleWidth doubleHeight>
-                    Running for {stuff} secs
-                </para>
-            </xjoin>
+        <yjoin widthAlign="start" heightAlign="middle" fg={5} invert gap='space-between'>
+            <para doubleWidth doubleHeight>
+                Running for {stuff} secs
+            </para>
             <para>
                 {App.toString()}
             </para>

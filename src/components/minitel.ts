@@ -8,6 +8,15 @@ import { RichChar } from '../richchar.js';
 import { FiberRoot } from 'react-reconciler';
 
 export class Minitel extends Container {
+    static defaultScreenAttributes: CharAttributes = {
+        fg: 7,
+        bg: 0,
+        underline: false,
+        doubleWidth: false,
+        doubleHeight: false,
+        noBlink: true,
+        invert: false,
+    };
     stream: Duplex;
     previousRender: RichCharGrid;
     _rootContainer?: FiberRoot;
@@ -51,7 +60,14 @@ export class Minitel extends Container {
             }
             if (lastAttributes.doubleHeight) outputString.push('\x0b');
         }
-        return outputString.join('');
+        // if i get bullied in prépa, it will be because of this
+        let preOptimized = outputString.join('\x80');
+        preOptimized = preOptimized.replace(
+            /(.)(€\1){2,62}/g,
+            (v) => `${v[0]}\x12${String.fromCharCode((v.length + 1) / 2 + 63)}`,
+        );
+        // console.log(JSON.stringify(preOptimized));
+        return preOptimized.split('\x80').join('');
     }
     renderToStream() {
         this.stream.write('\x0c')

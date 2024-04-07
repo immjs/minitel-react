@@ -2,9 +2,10 @@
 import { Duplex } from 'stream';
 import { Container } from './container.js';
 import { RichCharGrid } from '../richchargrid.js';
-import { MinitelObjectAttributes } from '../types.js';
+import { CharAttributes, MinitelObjectAttributes } from '../types.js';
 import { FiberRoot } from 'react-reconciler';
 export declare class Minitel extends Container {
+    static defaultScreenAttributes: CharAttributes;
     stream: Duplex;
     previousRender: RichCharGrid;
     _rootContainer?: FiberRoot;

@@ -2,7 +2,7 @@ import { RichChar } from './richchar.js';
 export class RichCharGrid {
     constructor(grid = []) {
         this.grid = grid;
-        this.width;
+        this.width; // run check on getter
     }
     static fromLine(line, attributes) {
         const result = new RichCharGrid([[]]);
