@@ -1,6 +1,6 @@
 # Minitel React
 
-A (somewhat experimental!) package to render react into a minitel!
+A (somewhat experimental! also somewhat opiniated) package to render react into a minitel!
 
 <small>*it's silly and dumb haha dont actually use it until v4.2.0 i pledge it will be better then*<small>
 
@@ -57,22 +57,29 @@ render(<App/>, new Minitel(serialport));
 |7         |White  |100%      |
 
 ### MinitelObjectAttributes
-|Attribute            |Type                  |Description                                                                             |
-|---------------------|----------------------|----------------------------------------------------------------------------------------|
-|* from CharAttributes|`CharAttributes[k]`   |The properties to pass to the underlying characters. Will not apply to fillChar for size|
-|fillChar             |`string`              |The character to fill holes with (can be useful for transparency)                       |
-|widthAlign           |`string`              |The way to align along the x axis (start for left, middle for middle, end for right)    |
-|heightAlign          |`string`              |The way to align along the y axis (start for top, middle for middle, end for bottom)    |
-|width                |`number`              |The desired width of the element                                                        |
-|height               |`number`              |The desired height of the element                                                       |
-|wrap                 |`string`              |The behaviour of text overflowing                                                       |
+|Attribute              |Type                  |Description                                                                             |
+|-----------------------|----------------------|----------------------------------------------------------------------------------------|
+|All from CharAttributes|`CharAttributes[k]`   |The properties to pass to the underlying characters. Will not apply to fillChar for size|
+|fillChar               |`string`              |The character to fill holes with (can be useful for transparency)                       |
+|widthAlign             |`string`              |The way to align along the x axis (start for left, middle for middle, end for right)    |
+|heightAlign            |`string`              |The way to align along the y axis (start for top, middle for middle, end for bottom)    |
+|width                  |`number`              |The desired width of the element                                                        |
+|height                 |`number`              |The desired height of the element                                                       |
+|wrap                   |`string`              |The behaviour of text overflowing                                                       |
+|gap                    |`number` or `string`  |The behaviour of text overflowing                                                       |
 
 
-### vjoin
+### &lt;vjoin&gt;
 Will vertically join all children
+|Attribute            |Type                  |Description                                                                                                   |
+|---------------------|----------------------|--------------------------------------------------------------------------------------------------------------|
+|gap                  |`number` or `string`  |The amount of gap to be had. Can be a number or space-{between,around,evenly} (refer to flex's justify-center)|
 
-### hjoin
+### &lt;hjoin&gt;
 Will horizontally join all children
+|Attribute            |Type                  |Description                                                                                                   |
+|---------------------|----------------------|--------------------------------------------------------------------------------------------------------------|
+|gap                  |`number` or `string`  |The amount of gap to be had. Can be a number or space-{between,around,evenly} (refer to flex's justify-center)|
 
-### para
+### &lt;para&gt;
 Will show text

@@ -5,12 +5,16 @@ import { MinitelObjectAttributes } from '../types.js';
 import { alignInvrt, inheritedProps } from '../utils.js';
 
 export class XJoin extends MinitelObject {
+    static defaultAttributes: XJoinAttributes = {
+        ...MinitelObject.defaultAttributes,
+        gap: 0,
+    }
     constructor(children: MinitelObject[] = [], attributes: Partial<MinitelObjectAttributes> = {}) {
         super(children, attributes);
     }
     render(inheritedAttributes: Partial<MinitelObjectAttributes>, forcedAttributes?: Partial<MinitelObjectAttributes>) {
-        const attributes: MinitelObjectAttributes = {
-            ...MinitelObject.defaultAttributes,
+        const attributes: XJoinAttributes = {
+            ...XJoin.defaultAttributes,
             ...inheritedAttributes,
             ...this.attributes,
             ...forcedAttributes,
@@ -60,4 +64,8 @@ export class XJoin extends MinitelObject {
         if (attributes.width != null) result.setWidth(attributes.width, alignInvrt[attributes.widthAlign], fillChar);
         return result;
     }
+}
+
+export interface XJoinAttributes extends MinitelObjectAttributes {
+    gap: number | 'space-between' | 'space-around' | 'space-evenly';
 }

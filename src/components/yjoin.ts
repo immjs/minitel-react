@@ -5,12 +5,16 @@ import { MinitelObjectAttributes } from '../types.js';
 import { alignInvrt, inheritedProps } from '../utils.js';
 
 export class YJoin extends MinitelObject {
+    static defaultAttributes: YJoinAttributes = {
+        ...MinitelObject.defaultAttributes,
+        gap: 0,
+    }
     constructor(children: MinitelObject[] = [], attributes: Partial<MinitelObjectAttributes> = {}) {
         super(children, attributes);
     }
     render(inheritedAttributes: Partial<MinitelObjectAttributes>, forcedAttributes?: Partial<MinitelObjectAttributes>) {
-        const attributes: MinitelObjectAttributes = {
-            ...MinitelObject.defaultAttributes,
+        const attributes: YJoinAttributes = {
+            ...YJoin.defaultAttributes,
             ...inheritedAttributes,
             ...this.attributes,
             ...forcedAttributes,
@@ -60,4 +64,8 @@ export class YJoin extends MinitelObject {
         if (attributes.height != null) result.setHeight(attributes.height, alignInvrt[attributes.heightAlign], fillChar);
         return result;
     }
+}
+
+export interface YJoinAttributes extends MinitelObjectAttributes {
+    gap: number | 'space-between' | 'space-around' | 'space-evenly';
 }
