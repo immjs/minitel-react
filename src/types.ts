@@ -13,11 +13,11 @@ export interface CharAttributes {
 export type Align = 'start' | 'middle' | 'end';
 export interface MinitelObjectAttributes extends Partial<CharAttributes> {
     fillChar: string;
-    widthAlign: Align;
-    heightAlign: Align;
     width: number | null;
     height: number | null;
+    textAlign: Align;
     wrap: 'clip' | 'word-wrap' | 'word-break';
+    flexGrow: number | boolean;
 }
 export interface RenderLinesAttributes extends MinitelObjectAttributes {
     forcedIndent?: number;

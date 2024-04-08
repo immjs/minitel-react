@@ -31,7 +31,7 @@ export class TextNode extends MinitelObject {
         const concreteWidth = Math.max(...lines.map((v) => v.length * xScalingFactor));
         const fillChar = new RichChar(attributes.fillChar, attributes).noSize();
         for (let line of lines) {
-            result.mergeY(RichCharGrid.fromLine(line, attributes).setWidth(concreteWidth, attributes.widthAlign, fillChar));
+            result.mergeY(RichCharGrid.fromLine(line, attributes).setWidth(concreteWidth, attributes.textAlign, fillChar));
         }
         return result;
     }

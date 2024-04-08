@@ -3,21 +3,22 @@ import { RichCharGrid } from '../richchargrid.js';
 import { SingletonArray } from '../singleton.js';
 import { RichChar } from '../richchar.js';
 export class Minitel extends Container {
-    constructor(stream, attributes) {
-        super([], attributes);
+    constructor(stream, settings) {
+        super([], {});
         this.children = new SingletonArray();
+        this.settings = Object.assign({ statusBar: false }, settings);
         this.stream = stream;
-        this.previousRender = RichCharGrid.fill(40, 24, new RichChar(' '));
-        this.stream.write('\x0c');
+        this.previousRender = RichCharGrid.fill(40, 24 + +this.settings.statusBar, new RichChar(' '));
+        this.stream.write('\x1f\x40\x41\x18\x0c');
         // TBD.
         // this.rxQueue = new FifoQueue();
     }
     renderString() {
         const renderGrid = this.children[0].render({}, {
             width: 40,
-            height: 24,
+            height: 24 + +this.settings.statusBar,
         });
-        renderGrid.setHeight(24, 'start', new RichChar(' '));
+        renderGrid.setHeight(24 + +this.settings.statusBar, 'start', new RichChar(' '));
         renderGrid.setWidth(40, 'start', new RichChar(' '));
         const outputString = [];
         let lastAttributes = {
@@ -31,6 +32,8 @@ export class Minitel extends Container {
         };
         let skippedACharCounter = 0;
         for (let lineIdx in renderGrid.grid) {
+            if (+lineIdx === 0 && this.settings.statusBar)
+                outputString.push('\x1f\x40\x41');
             const line = renderGrid.grid[lineIdx];
             for (let charIdx in line) {
                 const char = line[charIdx];
@@ -43,7 +46,7 @@ export class Minitel extends Container {
                     if (skippedACharCounter !== 0) {
                         outputString.push([
                             '\x1f',
-                            String.fromCharCode(64 + +lineIdx + 1),
+                            String.fromCharCode(64 + +lineIdx + 1 - (+this.settings.statusBar)),
                             String.fromCharCode(64 + +charIdx + 1),
                         ].join(''));
                     }
@@ -58,6 +61,17 @@ export class Minitel extends Container {
             }
             if (lastAttributes.doubleHeight)
                 outputString.push('\x0b');
+            if (+lineIdx === 0 && this.settings.statusBar)
+                outputString.push('\x1f\x41\x41');
+            lastAttributes = {
+                fg: 7,
+                bg: 0,
+                underline: false,
+                doubleWidth: false,
+                doubleHeight: false,
+                noBlink: true,
+                invert: false,
+            };
         }
         this.previousRender = renderGrid.copy();
         // if i get bullied in prépa, it will be because of this

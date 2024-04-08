@@ -10,9 +10,9 @@ export class MinitelObject {
         width: null,
         height: null,
         fillChar: ' ',
-        widthAlign: 'start',
-        heightAlign: 'start',
+        textAlign: 'start',
         wrap: 'clip',
+        flexGrow: 0,
     };
     constructor(children: MinitelObject[] = [], attributes: Partial<MinitelObjectAttributes> = {}) {
         this.children = [];

@@ -42,11 +42,11 @@ export class Paragraph extends MinitelObject {
         const result = new RichCharGrid([]);
 
         for (let line of lines) {
-            line.setWidth(width, alignInvrt[attributes.widthAlign], fillChar);
+            line.setWidth(width, alignInvrt[attributes.textAlign], fillChar);
             result.mergeY(line);
         }
         if (attributes.height) {
-            result.setHeight(attributes.height, alignInvrt[attributes.heightAlign], fillChar);
+            result.setHeight(attributes.height, 'end', fillChar);
         }
         return result;
     }

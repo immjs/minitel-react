@@ -1,11 +1,16 @@
 import { MinitelObject } from '../abstract/minitelobject.js';
 import { RichChar } from '../richchar.js';
 import { SingletonArray } from '../singleton.js';
-import { MinitelObjectAttributes } from '../types.js';
+import { Align, MinitelObjectAttributes } from '../types.js';
 import { alignInvrt, inheritedProps } from '../utils.js';
 
 export class Container extends MinitelObject {
-    constructor(children = [], attributes?: Partial<MinitelObjectAttributes>) {
+    static defaultAttributes: ContainerAttributes = {
+        ...MinitelObject.defaultAttributes,
+        widthAlign: 'start',
+        heightAlign: 'start',
+    };
+    constructor(children = [], attributes?: Partial<ContainerAttributes>) {
         if (children.length > 1) throw new Error('Container must only include one element');
         super([], attributes);
         this.children = new SingletonArray<MinitelObject>();
@@ -13,7 +18,7 @@ export class Container extends MinitelObject {
     }
     render(inheritedAttributes: Partial<MinitelObjectAttributes>, forcedAttributes?: Partial<MinitelObjectAttributes>) {
         const attributes = {
-            ...MinitelObject.defaultAttributes,
+            ...Container.defaultAttributes,
             ...inheritedAttributes,
             ...this.attributes,
             ...forcedAttributes,
@@ -27,4 +32,9 @@ export class Container extends MinitelObject {
 
         return render;
     }
+}
+
+export interface ContainerAttributes extends MinitelObjectAttributes {
+    widthAlign: Align;
+    heightAlign: Align;
 }

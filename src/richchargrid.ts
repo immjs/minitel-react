@@ -176,7 +176,6 @@ export class RichCharGrid {
     mergeY(operand: RichCharGrid, heightAlign = 'end') {
         if (operand.height === 0) return;
         if (operand.width !== this.width && this.height !== 0 && operand.height !== 0) {
-            console.log(this.toString(), operand.toString());
             throw new Error('Width is not shared between the two operands');
         }
         switch (heightAlign) {

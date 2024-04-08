@@ -1,6 +1,6 @@
 import { MinitelObject } from '../abstract/minitelobject.js';
 import { RichCharGrid } from '../richchargrid.js';
-import { MinitelObjectAttributes } from '../types.js';
+import { Align, MinitelObjectAttributes } from '../types.js';
 export declare class YJoin extends MinitelObject {
     static defaultAttributes: YJoinAttributes;
     constructor(children?: MinitelObject[], attributes?: Partial<MinitelObjectAttributes>);
@@ -8,4 +8,6 @@ export declare class YJoin extends MinitelObject {
 }
 export interface YJoinAttributes extends MinitelObjectAttributes {
     gap: number | 'space-between' | 'space-around' | 'space-evenly';
+    widthAlign: Align | 'stretch';
+    heightAlign: Align;
 }

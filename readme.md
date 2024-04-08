@@ -57,29 +57,42 @@ render(<App/>, new Minitel(serialport));
 |7         |White  |100%      |
 
 ### MinitelObjectAttributes
-|Attribute              |Type                  |Description                                                                             |
-|-----------------------|----------------------|----------------------------------------------------------------------------------------|
-|All from CharAttributes|`CharAttributes[k]`   |The properties to pass to the underlying characters. Will not apply to fillChar for size attributes (doubleWidth, doubleHeight)|
-|fillChar               |`string`              |The character to fill holes with (can be useful for transparency)                       |
-|widthAlign             |`string`              |The way to align along the x axis (start for left, middle for middle, end for right)    |
-|heightAlign            |`string`              |The way to align along the y axis (start for top, middle for middle, end for bottom)    |
-|width                  |`number`              |The desired width of the element                                                        |
-|height                 |`number`              |The desired height of the element                                                       |
-|wrap                   |`string`              |The behaviour of text overflowing                                                       |
-|gap                    |`number` or `string`  |The behaviour of text overflowing                                                       |
+|Attribute              |Type                  |Description                                                                                             |
+|-----------------------|----------------------|--------------------------------------------------------------------------------------------------------|
+|All from CharAttributes|`CharAttributes[k]`   |The properties to pass to the underlying characters. doubleWidth, doubleHeight won't apply for fillChars|
+|fillChar               |`string`              |The character to fill holes with (can be useful for transparency)                                       |
+|width                  |`number`              |The desired width of the element                                                                        |
+|height                 |`number`              |The desired height of the element                                                                       |
+|wrap                   |`string`              |The behaviour of text overflowing                                                                       |
+|textAlign              |`string`              |The way text should be aligned (start, middle, or end)                                                  |
+|flexGrow               |`boolean` or `string` |The flexGrow factor to be applied (refer to CSS flex-grow)                                              |
 
+### new Minitel
+|Argument (in order)|Type      |Description                                       |
+|-------------------|----------|--------------------------------------------------|
+|stream             |`Duplex`  |The duplex stream to communicate with the minitel |
+|settings           |`Settings`|The setings to configure the minitel instance with|
+
+#### On Settings
+|Argument |Type      |Description                                                       |
+|---------|----------|------------------------------------------------------------------|
+|statusBar|`boolean` |Whether to consider the first line of the render as the status bar|
 
 ### &lt;vjoin&gt;
 Will vertically join all children
-|Attribute            |Type                  |Description                                                                                                      |
-|---------------------|----------------------|-----------------------------------------------------------------------------------------------------------------|
+|Attribute            |Type                  |Description                                                                             |
+|---------------------|----------------------|-----------------------------------------------------------------|
 |gap                  |`number` or `string`  |The amount of gap to be had. Can be a number or space-{between,around,evenly} (refer to flexbox's justify-center)|
+|widthAlign           |`string`              |The way to align along the x axis (start, middle, end or stretch)|
+|heightAlign          |`string`              |The way to align along the y axis (start, middle or end)|
 
 ### &lt;hjoin&gt;
 Will horizontally join all children
-|Attribute            |Type                  |Description                                                                                                      |
-|---------------------|----------------------|-----------------------------------------------------------------------------------------------------------------|
+|Attribute            |Type                  |Description                                                      |
+|---------------------|----------------------|-----------------------------------------------------------------|
 |gap                  |`number` or `string`  |The amount of gap to be had. Can be a number or space-{between,around,evenly} (refer to flex's justify-center)|
+|heightAlign          |`string`              |The way to align along the y axis (start, middle, end or stretch)|
+|widthAlign           |`string`              |The way to align along the x axis (start, middle or end)|
 
 ### &lt;para&gt;
 Will show text

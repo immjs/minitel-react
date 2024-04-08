@@ -9,9 +9,39 @@ export class XJoin extends MinitelObject {
     render(inheritedAttributes, forcedAttributes) {
         const attributes = Object.assign(Object.assign(Object.assign(Object.assign({}, XJoin.defaultAttributes), inheritedAttributes), this.attributes), forcedAttributes);
         const fillChar = new RichChar(attributes.fillChar, attributes).noSize();
-        const renders = this.children.map((v) => v.render(inheritedProps(attributes)));
+        const heightIfStretch = attributes.height || this.children.reduce((p, c) => {
+            const h = c.render(inheritedProps(attributes)).height;
+            if (h == null)
+                return p;
+            return Math.max(p, h);
+        }, -Infinity);
+        let cumulatedWidth = 0;
+        const rendersNoFlexGrow = this.children.map((v) => {
+            if (v.attributes.flexGrow)
+                return null;
+            const render = v.render(inheritedProps(attributes), Object.assign({}, (attributes.heightAlign === 'stretch' ? { height: heightIfStretch } : {})));
+            cumulatedWidth += render.width;
+            return render;
+        });
+        const flexGrowTotal = this.children.reduce((p, c) => p + +(c.attributes.flexGrow || 0), 0);
+        const remainingSpace = attributes.width != null ? attributes.width - cumulatedWidth : null;
+        const unitOfFlexGrowSpace = remainingSpace != null ? remainingSpace / flexGrowTotal : null;
+        let usedRemainingSpace = 0;
+        const rendersYesFlexGrow = this.children.map((v) => {
+            if (!v.attributes.flexGrow)
+                return null;
+            if (unitOfFlexGrowSpace != null && remainingSpace != null) {
+                const prevUsedRemSpace = usedRemainingSpace;
+                usedRemainingSpace += unitOfFlexGrowSpace;
+                return v.render(inheritedProps(attributes), Object.assign(Object.assign({}, (attributes.heightAlign === 'stretch' ? { height: heightIfStretch } : {})), { width: Math.round(usedRemainingSpace) - Math.round(prevUsedRemSpace) }));
+            }
+            return v.render(inheritedProps(attributes));
+        });
+        const renders = rendersNoFlexGrow.map((v, i) => v != null ? v : rendersYesFlexGrow[i]);
         const result = new RichCharGrid();
-        const height = attributes.height || Math.max(...renders.map((v) => v.height));
+        const height = attributes.heightAlign === 'stretch'
+            ? heightIfStretch
+            : Math.max(...renders.map((v) => v.height));
         if (renders.length === 0)
             return RichCharGrid.fill(attributes.width || 0, attributes.height || 0, fillChar);
         const contentsWidth = renders.reduce((c, v) => c + v.width, 0);
@@ -35,12 +65,13 @@ export class XJoin extends MinitelObject {
         }
         let gapCumul = 0;
         for (let render of renders) {
-            render.setHeight(height, alignInvrt[attributes.heightAlign], fillChar);
+            if (attributes.heightAlign !== 'stretch')
+                render.setHeight(height, alignInvrt[attributes.heightAlign], fillChar);
             if (render !== renders[0]) {
                 const gapConstituent = new RichCharGrid([]);
                 const lastCumul = gapCumul;
                 gapCumul += gapWidth;
-                gapConstituent.setWidth(Math.round(gapCumul - lastCumul), 'end', fillChar);
+                gapConstituent.setWidth(Math.round(gapCumul) - Math.round(lastCumul), 'end', fillChar);
                 gapConstituent.setHeight(height, 'end', fillChar);
                 result.mergeX(gapConstituent);
             }
@@ -51,4 +82,4 @@ export class XJoin extends MinitelObject {
         return result;
     }
 }
-XJoin.defaultAttributes = Object.assign(Object.assign({}, MinitelObject.defaultAttributes), { gap: 0 });
+XJoin.defaultAttributes = Object.assign(Object.assign({}, MinitelObject.defaultAttributes), { gap: 0, widthAlign: 'start', heightAlign: 'stretch' });

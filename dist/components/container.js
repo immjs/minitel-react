@@ -12,7 +12,7 @@ export class Container extends MinitelObject {
             this.appendChild(children[0]);
     }
     render(inheritedAttributes, forcedAttributes) {
-        const attributes = Object.assign(Object.assign(Object.assign(Object.assign({}, MinitelObject.defaultAttributes), inheritedAttributes), this.attributes), forcedAttributes);
+        const attributes = Object.assign(Object.assign(Object.assign(Object.assign({}, Container.defaultAttributes), inheritedAttributes), this.attributes), forcedAttributes);
         const fillChar = new RichChar(attributes.fillChar, attributes).noSize();
         const render = this.children[0].render(inheritedProps(attributes), {});
         if (attributes.width)
@@ -22,3 +22,4 @@ export class Container extends MinitelObject {
         return render;
     }
 }
+Container.defaultAttributes = Object.assign(Object.assign({}, MinitelObject.defaultAttributes), { widthAlign: 'start', heightAlign: 'start' });

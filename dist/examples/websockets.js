@@ -5,14 +5,16 @@ import React from 'react';
 const wss = new WebSocketServer({ port: 8080 });
 function App() {
     const [stuff, setStuff] = React.useState(1);
+    const [time, setTime] = React.useState(Date.now());
     React.useEffect(() => {
         setInterval(() => setStuff(s => s + 1), 100);
+        setInterval(() => setTime(Date.now()), 500);
     }, []);
-    return (_jsxs("yjoin", { widthAlign: "middle", heightAlign: "middle", children: [_jsx("para", { fg: 0, bg: 7, underline: true, doubleHeight: true, children: ` ${(stuff / 10).toFixed(1)} ` }), _jsx("yjoin", { width: 40, children: _jsx("para", { children: App.toString() }) })] }));
+    return (_jsxs("yjoin", { children: [_jsx("xjoin", { invert: true, widthAlign: "middle", children: Intl.DateTimeFormat('en-US', { timeStyle: 'medium' }).format(time) }), _jsxs("yjoin", { flexGrow: true, heightAlign: "middle", gap: "space-evenly", children: [_jsx("xjoin", { widthAlign: "middle", bg: 7, fg: 0, children: _jsxs("para", { doubleHeight: true, doubleWidth: true, children: [(stuff / 10).toFixed(1), " @ 9600 bauds"] }) }), _jsx("yjoin", { children: _jsx("para", { children: App.toString() }) })] })] }));
 }
 ;
 wss.on('connection', function connection(ws) {
-    const minitel = new Minitel(createWebSocketStream(ws, { encoding: 'utf8' }));
+    const minitel = new Minitel(createWebSocketStream(ws, { encoding: 'utf8' }), { statusBar: true });
     ws.on('message', (stuff) => {
         console.log({ stuff });
     });
