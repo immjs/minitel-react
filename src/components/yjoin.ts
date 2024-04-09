@@ -3,28 +3,24 @@ import { RichChar } from '../richchar.js';
 import { RichCharGrid } from '../richchargrid.js';
 import { Align, MinitelObjectAttributes } from '../types.js';
 import { alignInvrt, inheritedProps } from '../utils.js';
+import type { Minitel } from './minitel.js';
 
-export class YJoin extends MinitelObject {
+export class YJoin extends MinitelObject<YJoinAttributes> {
     static defaultAttributes: YJoinAttributes = {
         ...MinitelObject.defaultAttributes,
         gap: 0,
         widthAlign: 'stretch',
         heightAlign: 'start',
     }
-    constructor(children: MinitelObject[] = [], attributes: Partial<MinitelObjectAttributes> = {}) {
-        super(children, attributes);
+    defaultAttributes = YJoin.defaultAttributes;
+    constructor(children: MinitelObject[], attributes: Partial<MinitelObjectAttributes>, minitel: Minitel) {
+        super(children, attributes, minitel);
     }
-    render(inheritedAttributes: Partial<MinitelObjectAttributes>, forcedAttributes?: Partial<MinitelObjectAttributes>) {
-        const attributes: YJoinAttributes = {
-            ...YJoin.defaultAttributes,
-            ...inheritedAttributes,
-            ...this.attributes,
-            ...forcedAttributes,
-        };
+    render(attributes: YJoinAttributes, inheritMe: Partial<YJoinAttributes>) {
         const fillChar = new RichChar(attributes.fillChar, attributes).noSize();
 
         const widthIfStretch = attributes.width || this.children.reduce((p, c) => {
-            const w = c.render(inheritedProps(attributes)).width;
+            const w = c.renderWrapper(inheritMe).width;
             if (w == null) return p;
             return Math.max(p, w);
         }, -Infinity);
@@ -33,7 +29,7 @@ export class YJoin extends MinitelObject {
 
         const rendersNoFlexGrow = this.children.map((v) => {
             if (v.attributes.flexGrow) return null;
-            const render = v.render(inheritedProps(attributes), {
+            const render = v.renderWrapper(inheritMe, {
                 ...(attributes.widthAlign === 'stretch' ? { width: widthIfStretch } : {}),
             });
             cumulatedHeight += render.height;
@@ -53,12 +49,12 @@ export class YJoin extends MinitelObject {
             if (unitOfFlexGrowSpace != null && remainingSpace != null) {
                 const prevUsedRemSpace = usedRemainingSpace;
                 usedRemainingSpace += unitOfFlexGrowSpace;
-                return v.render(inheritedProps(attributes), {
+                return v.renderWrapper(inheritMe, {
                     ...(attributes.widthAlign === 'stretch' ? { width: widthIfStretch } : {}),
                     height: Math.round(usedRemainingSpace) - Math.round(prevUsedRemSpace),
                 });
             }
-            return v.render(inheritedProps(attributes));
+            return v.renderWrapper(inheritMe);
         });
 
         const renders = rendersNoFlexGrow.map((v, i) => v != null ? v : rendersYesFlexGrow[i]) as RichCharGrid[];
@@ -101,6 +97,7 @@ export class YJoin extends MinitelObject {
                 gapConstituent.setWidth(width, 'end', fillChar);
                 result.mergeY(gapConstituent);
             }
+            // console.log(render.locationDescriptors);
             result.mergeY(render);
         } 
         if (attributes.height != null) result.setHeight(attributes.height, alignInvrt[attributes.heightAlign], fillChar);

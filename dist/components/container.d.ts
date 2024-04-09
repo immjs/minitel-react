@@ -1,9 +1,11 @@
 import { MinitelObject } from '../abstract/minitelobject.js';
 import { Align, MinitelObjectAttributes } from '../types.js';
-export declare class Container extends MinitelObject {
+import type { Minitel } from './minitel.js';
+export declare class Container extends MinitelObject<ContainerAttributes> {
     static defaultAttributes: ContainerAttributes;
-    constructor(children?: never[], attributes?: Partial<ContainerAttributes>);
-    render(inheritedAttributes: Partial<MinitelObjectAttributes>, forcedAttributes?: Partial<MinitelObjectAttributes>): import("../richchargrid.js").RichCharGrid;
+    defaultAttributes: ContainerAttributes;
+    constructor(children: never[] | undefined, attributes: Partial<ContainerAttributes>, minitel: Minitel);
+    render(attributes: ContainerAttributes, inheritMe: Partial<ContainerAttributes>): import("../richchargrid.js").RichCharGrid;
 }
 export interface ContainerAttributes extends MinitelObjectAttributes {
     widthAlign: Align;

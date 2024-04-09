@@ -1,7 +1,9 @@
+import { LocationDescriptors } from './locationdescriptor.js';
 import { RichChar } from './richchar.js';
-import { Align, CharAttributes } from './types.js';
+import { Align, CharAttributes, FullPadding } from './types.js';
 export declare class RichCharGrid {
     grid: RichChar[][];
+    locationDescriptors: LocationDescriptors;
     constructor(grid?: RichChar[][]);
     mostCommonAttribute(attribute: 'fg' | 'invert' | 'noBlink'): any;
     static fromLine(line: string | string[], attributes: Partial<CharAttributes>): RichCharGrid;
@@ -11,11 +13,12 @@ export declare class RichCharGrid {
     copy(): RichCharGrid;
     copyLine(index: number): RichChar[][];
     copyCol(index: number): RichChar[][];
-    pad(arg: number | [number, number] | [number, number, number, number], fillChar: RichChar): this;
+    pad(fullPad: FullPadding, fillChar: RichChar): this;
     cutHeight(height: number, heightAlign: Align): this;
     cutWidth(width: number, widthAlign: Align): this;
     setHeight(height: number, heightAlign: Align, char?: RichChar): this;
     setWidth(width: number, widthAlign: Align, char?: RichChar): this;
+    mergePropertyDescriptors(operand: RichCharGrid): void;
     mergeY(operand: RichCharGrid, heightAlign?: string): void;
     mergeX(operand: RichCharGrid, widthAlign?: string): void;
     toString(): string;

@@ -1,5 +1,6 @@
-import { XJoinAttributes } from "./components/xjoin.js";
-import { YJoinAttributes } from "./components/yjoin.js";
+import { InputAttributes } from './components/input.js';
+import { XJoinAttributes } from './components/xjoin.js';
+import { YJoinAttributes } from './components/yjoin.js';
 
 export interface CharAttributes {
     fg: number;
@@ -18,21 +19,25 @@ export interface MinitelObjectAttributes extends Partial<CharAttributes> {
     textAlign: Align;
     wrap: 'clip' | 'word-wrap' | 'word-break';
     flexGrow: number | boolean;
+    pad: Padding;
 }
 export interface RenderLinesAttributes extends MinitelObjectAttributes {
     forcedIndent?: number;
 }
 
 type MiniProps<T> = Partial<T & { children: React.ReactNode | React.ReactNode[] }>;
-type MiniElementsWithProps = {
-    xjoin: MiniProps<XJoinAttributes>;
-    yjoin: MiniProps<YJoinAttributes>;
-    para: MiniProps<MinitelObjectAttributes>;
-    cont: MiniProps<MinitelObjectAttributes>;
-};
 
-declare module "react/jsx-runtime" {
+declare module 'react/jsx-runtime' {
     namespace JSX {
-        interface IntrinsicElements extends MiniElementsWithProps {}
+        interface IntrinsicElements {
+            xjoin: MiniProps<XJoinAttributes>;
+            yjoin: MiniProps<YJoinAttributes>;
+            para: MiniProps<MinitelObjectAttributes>;
+            cont: MiniProps<MinitelObjectAttributes>;
+            input: MiniProps<InputAttributes>;
+        }
     }
 }
+
+export type FullPadding = [number, number, number, number];
+export type Padding = number | [number, number] | FullPadding;

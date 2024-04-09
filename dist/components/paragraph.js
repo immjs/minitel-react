@@ -1,21 +1,20 @@
 import { MinitelObject } from '../abstract/minitelobject.js';
 import { RichChar } from '../richchar.js';
 import { RichCharGrid } from '../richchargrid.js';
-import { alignInvrt, inheritedProps } from '../utils.js';
+import { alignInvrt } from '../utils.js';
 export class Paragraph extends MinitelObject {
-    constructor(children, attributes) {
-        super([], attributes);
+    constructor(children, attributes, minitel) {
+        super([], attributes, minitel);
         this.children = [];
         for (let child of children) {
             this.appendChild(child);
         }
     }
-    render(inheritedAttributes, forcedAttributes) {
-        const attributes = Object.assign(Object.assign(Object.assign(Object.assign({}, MinitelObject.defaultAttributes), inheritedAttributes), this.attributes), forcedAttributes);
+    render(attributes, inheritMe) {
         const fillChar = new RichChar(attributes.fillChar, attributes).noSize();
         const lines = [new RichCharGrid([[]])];
         for (let child of this.children) {
-            const render = child.renderLines(inheritedProps(attributes), {
+            const render = child.renderLines(inheritMe, {
                 width: attributes.width,
                 forcedIndent: lines.at(-1).width,
             });

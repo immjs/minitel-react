@@ -3,21 +3,15 @@ import { RichCharGrid } from '../richchargrid.js';
 import { MinitelObjectAttributes, RenderLinesAttributes } from '../types.js';
 import wrap from 'word-wrap';
 import { RichChar } from '../richchar.js';
+import type { Minitel } from '../index.js';
 
 export class TextNode extends MinitelObject {
     text: string;
-    constructor(text: string, attributes: Partial<MinitelObjectAttributes> = {}) {
-        super([], attributes);
+    constructor(text: string, attributes: Partial<MinitelObjectAttributes>, minitel: Minitel) {
+        super([], attributes, minitel);
         this.text = text;
     }
-    render(inheritedAttributes: Partial<MinitelObjectAttributes>, forcedAttributes: Partial<MinitelObjectAttributes>) {
-        const attributes: MinitelObjectAttributes = {
-            ...MinitelObject.defaultAttributes,
-            ...inheritedAttributes,
-            ...this.attributes,
-            ...forcedAttributes,
-        };
-
+    render(attributes: MinitelObjectAttributes, inheritMe: Partial<MinitelObjectAttributes>) {
         let text = this.text;
         const width = attributes.width;
         const xScalingFactor = attributes.doubleWidth ? 2 : 1;
@@ -47,7 +41,7 @@ export class TextNode extends MinitelObject {
     }
     renderLines(inheritedAttributes: Partial<MinitelObjectAttributes>, forcedAttributes: Partial<RenderLinesAttributes>) {
         const attributes = {
-            ...MinitelObject.defaultAttributes,
+            ...this.defaultAttributes,
             ...inheritedAttributes,
             ...this.attributes,
             ...forcedAttributes,

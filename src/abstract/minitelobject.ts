@@ -1,11 +1,17 @@
+import { EventEmitter } from 'node:events';
 import type { Minitel } from '../components/minitel.js';
+import { RichChar } from '../richchar.js';
 import { RichCharGrid } from '../richchargrid.js';
 import { MinitelObjectAttributes } from '../types.js';
+import { inheritedProps, padding } from '../utils.js';
+import { Focusable } from './focusable.js';
 
-export class MinitelObject {
+export class MinitelObject<T extends MinitelObjectAttributes = MinitelObjectAttributes, U extends Record<string, any[]> = Record<string, any[]>> extends EventEmitter<U> {
     children: MinitelObject[];
-    attributes: Partial<MinitelObjectAttributes>;
+    attributes: Partial<T>;
     parent?: MinitelObject;
+    minitel: Minitel;
+    keepElmDesc: boolean = false;
     static defaultAttributes: MinitelObjectAttributes = {
         width: null,
         height: null,
@@ -13,9 +19,13 @@ export class MinitelObject {
         textAlign: 'start',
         wrap: 'clip',
         flexGrow: 0,
+        pad: 0,
     };
-    constructor(children: MinitelObject[] = [], attributes: Partial<MinitelObjectAttributes> = {}) {
+    defaultAttributes: T = MinitelObject.defaultAttributes as T;
+    constructor(children: MinitelObject[], attributes: Partial<T>, minitel: Minitel) {
+        super();
         this.children = [];
+        this.minitel = minitel;
         for (let child of children) {
             this.appendChild(child);
         }
@@ -35,12 +45,41 @@ export class MinitelObject {
         const index = this.children.indexOf(child);
         this.children.splice(index, 1);
     }
-    minitel(): Minitel {
-        if (!this.parent) throw new Error('Could not retrieve Minitel (root node)');
-        return this.parent.minitel();
-    }
 
-    render(inheritedAttributes: Partial<MinitelObjectAttributes>, forcedAttributes?: Partial<MinitelObjectAttributes>) {
-        return new RichCharGrid();
+    render(attributes: T, inheritMe: Partial<T>): RichCharGrid {
+        throw new Error('MinitelObject has no render');
+    }
+    renderWrapper(inheritedAttributes: Partial<T>, forcedAttributes?: Partial<T>): RichCharGrid {
+        const attributes: T = {
+            ...this.defaultAttributes,
+            ...inheritedAttributes,
+            ...this.attributes,
+            ...forcedAttributes,
+        };
+        const pad = padding.normalise(attributes.pad);
+        attributes.width = attributes.width != null ? padding.exludeX(attributes.width, pad) : null;
+        attributes.height = attributes.height != null ? padding.exludeY(attributes.height, pad) : null;
+
+        const result = this.render(attributes, inheritedProps({
+            ...inheritedAttributes,
+            ...this.attributes,
+            ...forcedAttributes,
+        }));
+
+        // Descriptor before pad, is this the right choice?
+        if (this.keepElmDesc) result.locationDescriptors.add(this);
+
+        result.pad(pad, new RichChar(attributes.fillChar, attributes).noSize());
+
+        return result;
+    }
+    focusables(): Focusable[] {
+        const isFocusable = (v: MinitelObject): v is Focusable => 'disabled' in v;
+        return this.children.flatMap((v) => {
+            const focusables = [];
+            if (isFocusable(v) && !v.disabled) focusables.push(v);
+            focusables.push(...v.focusables());
+            return focusables;
+        });
     }
 }

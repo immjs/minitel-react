@@ -1,10 +1,13 @@
+import { LocationDescriptors } from './locationdescriptor.js';
 import { RichChar } from './richchar.js';
-import { Align, CharAttributes, MinitelObjectAttributes } from './types.js';
+import { Align, CharAttributes, FullPadding, Padding } from './types.js';
 
 export class RichCharGrid {
     grid: RichChar[][];
+    locationDescriptors: LocationDescriptors;
     constructor(grid: RichChar[][] = []) {
         this.grid = grid;
+        this.locationDescriptors = new LocationDescriptors()
         this.width; // run check on getter
     }
     mostCommonAttribute(attribute: 'fg' | 'invert' | 'noBlink') {
@@ -82,30 +85,25 @@ export class RichCharGrid {
         return this.grid.map((char) => [char[index].copy()]);
     }
 
-    pad(arg: number | [number, number] | [number, number, number, number], fillChar: RichChar) {
-        let pad: [number, number, number, number]; // URDL
-        if (typeof arg === 'number') {
-            pad = [arg, arg, arg, arg];
-        } else {
-            pad = [arg[0], arg[1], arg[2] ?? arg[0], arg[3] ?? arg[1]];
-        }
-
+    pad(fullPad: FullPadding, fillChar: RichChar) {
         const safeFillChar = fillChar.noSize();
-        this.setHeight(this.height + pad[0], 'start', safeFillChar);
-        this.setWidth(this.width + pad[1], 'end', safeFillChar);
-        this.setHeight(this.height + pad[2], 'end', safeFillChar);
-        this.setWidth(this.width + pad[3], 'start', safeFillChar);
+        this.setHeight(this.height + fullPad[0], 'start', safeFillChar);
+        this.setWidth(this.width + fullPad[1], 'end', safeFillChar);
+        this.setHeight(this.height + fullPad[2], 'end', safeFillChar);
+        this.setWidth(this.width + fullPad[3], 'start', safeFillChar);
 
         return this;
     }
 
     cutHeight(height: number, heightAlign: Align) {
         const prevHeight = this.height;
-        const cutAmount = this.height - height;
+        const cutAmount = prevHeight - height;
         switch (heightAlign) {
             case 'start':
             case 'end':
                 const cutStart = { start: 0, end: height }[heightAlign];
+
+                if (heightAlign === 'start') this.locationDescriptors.applyDelta(-cutAmount, 0);
 
                 this.grid.splice(cutStart, cutAmount);
                 return this;
@@ -124,6 +122,8 @@ export class RichCharGrid {
             case 'start':
             case 'end':
                 const cutStart = { start: 0, end: width }[widthAlign];
+
+                if (widthAlign === 'start') this.locationDescriptors.applyDelta(0, -cutAmount);
 
                 this.grid.forEach((line) => line.splice(cutStart, cutAmount));
                 return this;
@@ -173,29 +173,41 @@ export class RichCharGrid {
         }
     }
 
+    mergePropertyDescriptors(operand: RichCharGrid) {
+        // console.log('MergePropertyDescriptors', this.locationDescriptors, operand.locationDescriptors);
+        if (!operand.locationDescriptors.isEmpty) this.locationDescriptors.merge(operand.locationDescriptors);
+    }
+
     mergeY(operand: RichCharGrid, heightAlign = 'end') {
         if (operand.height === 0) return;
         if (operand.width !== this.width && this.height !== 0 && operand.height !== 0) {
             throw new Error('Width is not shared between the two operands');
         }
+        const prevHeight = this.height;
         switch (heightAlign) {
             case 'start':
                 for (let lineIdx in operand.grid) {
                     this.grid.unshift(...operand.copyLine(+lineIdx));
                 }
+
+                this.locationDescriptors.applyDelta(operand.height, 0);
                 break;
             case 'end':
                 for (let lineIdx in operand.grid) {
                     this.grid.push(...operand.copyLine(+lineIdx));
                 }
+                operand.locationDescriptors.applyDelta(prevHeight, 0);
                 break;
         }
+
+        this.mergePropertyDescriptors(operand);
     }
     mergeX(operand: RichCharGrid, widthAlign = 'end') {
         if (operand.width === 0) return;
         if (operand.height !== this.height && this.width !== 0 && operand.height !== 0) {
             throw new Error('Height is not shared between the two operands');
         }
+        const prevWidth = this.width;
         switch (widthAlign) {
             case 'start':
                 for (let colIdx in operand.grid[0]) {
@@ -204,6 +216,7 @@ export class RichCharGrid {
                         this.grid[idx].unshift(...line)
                     });
                 }
+                this.locationDescriptors.applyDelta(0, operand.width);
                 break;
             case 'end':
                 for (let colIdx in operand.grid[0]) {
@@ -212,8 +225,11 @@ export class RichCharGrid {
                         this.grid[idx].push(...line)
                     });
                 }
+                operand.locationDescriptors.applyDelta(0, prevWidth);
                 break;
         }
+
+        this.mergePropertyDescriptors(operand);
     }
     toString() {
         return `=====RICHCHARGRID=====

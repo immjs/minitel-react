@@ -15,38 +15,40 @@ import { YJoin } from './components/yjoin.js';
 import { XJoin } from './components/xjoin.js';
 import { TextNode } from './abstract/textnode.js';
 import { DefaultEventPriority, } from 'react-reconciler/constants.js';
+import { Input } from './components/input.js';
 const elements = {
     para: Paragraph,
     yjoin: YJoin,
     xjoin: XJoin,
+    input: Input,
 };
 let lastImmediate = null;
 const MiniRenderer = Reconciler({
     supportsMutation: true,
     supportsHydration: false,
-    createInstance(type, props) {
+    createInstance(type, props, rootContainer) {
         const InstanceConstructor = elements[type];
         let { children } = props, attributes = __rest(props, ["children"]);
         // if (children != null && !Array.isArray(children)) children = [children];
-        const instance = new InstanceConstructor([], attributes);
+        const instance = new InstanceConstructor([], attributes, rootContainer);
         return instance;
     },
-    createTextInstance(text) {
-        return new TextNode(text);
+    createTextInstance(text, rootContainer) {
+        return new TextNode(text, {}, rootContainer);
     },
     appendInitialChild(parentInstance, child) {
         parentInstance.appendChild(child);
     },
     appendChild(parentInstance, child) {
-        const newChild = typeof child === 'string' ? new TextNode(child) : child;
+        const newChild = typeof child === 'string' ? new TextNode(child, {}, parentInstance.minitel) : child;
         parentInstance.appendChild(newChild);
     },
     appendChildToContainer(container, child) {
-        const newChild = typeof child === 'string' ? new TextNode(child) : child;
+        const newChild = typeof child === 'string' ? new TextNode(child, {}, container.minitel) : child;
         container.appendChild(newChild);
     },
     insertBefore(parentInstance, child, beforeChild) {
-        const newChild = typeof child === 'string' ? new TextNode(child) : child;
+        const newChild = typeof child === 'string' ? new TextNode(child, {}, parentInstance.minitel) : child;
         parentInstance.insertBeforeChild(newChild, beforeChild);
     },
     removeChild(parentInstance, child) {
@@ -59,13 +61,7 @@ const MiniRenderer = Reconciler({
         return {};
     },
     commitUpdate(instance) {
-        // its so dirty i love it haha
-        if (lastImmediate != null)
-            clearImmediate(lastImmediate);
-        lastImmediate = setImmediate(() => {
-            instance.minitel().renderToStream();
-            lastImmediate = null;
-        });
+        instance.minitel.queueImmediateRenderToStream();
     },
     clearContainer(container) {
         if (container.children[0])
@@ -73,12 +69,7 @@ const MiniRenderer = Reconciler({
     },
     finalizeInitialChildren: () => true,
     commitMount(instance) {
-        if (lastImmediate != null)
-            clearImmediate(lastImmediate);
-        lastImmediate = setImmediate(() => {
-            instance.minitel().renderToStream();
-            lastImmediate = null;
-        });
+        instance.minitel.queueImmediateRenderToStream();
     },
     shouldSetTextContent: () => false,
     getRootHostContext: () => null,

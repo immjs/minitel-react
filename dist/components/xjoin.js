@@ -1,16 +1,16 @@
 import { MinitelObject } from '../abstract/minitelobject.js';
 import { RichChar } from '../richchar.js';
 import { RichCharGrid } from '../richchargrid.js';
-import { alignInvrt, inheritedProps } from '../utils.js';
+import { alignInvrt } from '../utils.js';
 export class XJoin extends MinitelObject {
-    constructor(children = [], attributes = {}) {
-        super(children, attributes);
+    constructor(children, attributes, minitel) {
+        super(children, attributes, minitel);
+        this.defaultAttributes = XJoin.defaultAttributes;
     }
-    render(inheritedAttributes, forcedAttributes) {
-        const attributes = Object.assign(Object.assign(Object.assign(Object.assign({}, XJoin.defaultAttributes), inheritedAttributes), this.attributes), forcedAttributes);
+    render(attributes, inheritMe) {
         const fillChar = new RichChar(attributes.fillChar, attributes).noSize();
         const heightIfStretch = attributes.height || this.children.reduce((p, c) => {
-            const h = c.render(inheritedProps(attributes)).height;
+            const h = c.renderWrapper(inheritMe).height;
             if (h == null)
                 return p;
             return Math.max(p, h);
@@ -19,7 +19,7 @@ export class XJoin extends MinitelObject {
         const rendersNoFlexGrow = this.children.map((v) => {
             if (v.attributes.flexGrow)
                 return null;
-            const render = v.render(inheritedProps(attributes), Object.assign({}, (attributes.heightAlign === 'stretch' ? { height: heightIfStretch } : {})));
+            const render = v.renderWrapper(inheritMe, Object.assign({}, (attributes.heightAlign === 'stretch' ? { height: heightIfStretch } : {})));
             cumulatedWidth += render.width;
             return render;
         });
@@ -33,9 +33,9 @@ export class XJoin extends MinitelObject {
             if (unitOfFlexGrowSpace != null && remainingSpace != null) {
                 const prevUsedRemSpace = usedRemainingSpace;
                 usedRemainingSpace += unitOfFlexGrowSpace;
-                return v.render(inheritedProps(attributes), Object.assign(Object.assign({}, (attributes.heightAlign === 'stretch' ? { height: heightIfStretch } : {})), { width: Math.round(usedRemainingSpace) - Math.round(prevUsedRemSpace) }));
+                return v.renderWrapper(inheritMe, Object.assign(Object.assign({}, (attributes.heightAlign === 'stretch' ? { height: heightIfStretch } : {})), { width: Math.round(usedRemainingSpace) - Math.round(prevUsedRemSpace) }));
             }
-            return v.render(inheritedProps(attributes));
+            return v.renderWrapper(inheritMe);
         });
         const renders = rendersNoFlexGrow.map((v, i) => v != null ? v : rendersYesFlexGrow[i]);
         const result = new RichCharGrid();

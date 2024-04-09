@@ -84,7 +84,7 @@ Will vertically join all children
 |---------------------|----------------------|-----------------------------------------------------------------|
 |gap                  |`number` or `string`  |The amount of gap to be had. Can be a number or space-{between,around,evenly} (refer to flexbox's justify-center)|
 |widthAlign           |`string`              |The way to align along the x axis (start, middle, end or stretch)|
-|heightAlign          |`string`              |The way to align along the y axis (start, middle or end)|
+|heightAlign          |`string`              |The way to align along the y axis (start, middle or end)         |
 
 ### &lt;hjoin&gt;
 Will horizontally join all children
@@ -92,7 +92,14 @@ Will horizontally join all children
 |---------------------|----------------------|-----------------------------------------------------------------|
 |gap                  |`number` or `string`  |The amount of gap to be had. Can be a number or space-{between,around,evenly} (refer to flex's justify-center)|
 |heightAlign          |`string`              |The way to align along the y axis (start, middle, end or stretch)|
-|widthAlign           |`string`              |The way to align along the x axis (start, middle or end)|
+|widthAlign           |`string`              |The way to align along the x axis (start, middle or end)         |
+
+### &lt;input&gt;
+Will be an input
+|Attribute            |Type                  |Description                                                      |
+|---------------------|----------------------|-----------------------------------------------------------------|
+|autofocus            |`boolean`             |Whether or not to autofocus on the input                         |
+|type                 |`string`              |The type of input (for now, text or password)                    |
 
 ### &lt;para&gt;
 Will show text

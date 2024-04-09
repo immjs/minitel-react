@@ -11,4 +11,9 @@ export class SingletonArray extends Array {
         this.checkIsSingleton(args.length);
         return super.unshift(...args);
     }
+    flatMap(callback, thisArg) {
+        if (this.length < 1)
+            return [];
+        return [this[0]].flatMap(callback);
+    }
 }
