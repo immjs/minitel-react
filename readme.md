@@ -77,6 +77,7 @@ render(<App/>, new Minitel(serialport));
 |Argument |Type      |Description                                                       |
 |---------|----------|------------------------------------------------------------------|
 |statusBar|`boolean` |Whether to consider the first line of the render as the status bar|
+|localEcho|`boolean` |Whether to keep local echo (écho local) enabled                   |
 
 ### &lt;vjoin&gt;
 Will vertically join all children

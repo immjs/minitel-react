@@ -3,10 +3,10 @@ import { RichChar } from './richchar.js';
 import { Align, CharAttributes, FullPadding, Padding } from './types.js';
 
 export class RichCharGrid {
-    grid: RichChar[][];
+    grid: (RichChar<string> | RichChar<null>)[][];
     locationDescriptors: LocationDescriptors;
     _width: number = 0;
-    constructor(grid: RichChar[][] = []) {
+    constructor(grid: (RichChar<string> | RichChar<null>)[][] = []) {
         this.grid = grid;
         this.locationDescriptors = new LocationDescriptors()
         this.width; // run check on getter
@@ -35,29 +35,28 @@ export class RichCharGrid {
         for (let char of line) {
             const newChar = new RichChar(char, attributes);
             allNewChars.push(newChar);
-            const emptyCodepdChar = new RichChar('', attributes);
-            emptyCodepdChar.addCodep(newChar);
+            const emptyCodepdChar = new RichChar(null, attributes, [0, -1], newChar).noSize();
             result.mergeX(new RichCharGrid(attributes.doubleWidth
                 ? [[newChar, emptyCodepdChar]]
                 : [[newChar]]));
         }
         if (attributes.doubleHeight) {
-            const xScalingFactor = attributes.doubleWidth ? 2 : 1;
             const newLine = new RichCharGrid([[]]);
             for (let newChar of allNewChars) {
-                const emptyCodepdChar = new RichChar(' ', attributes).noSize();
-                newChar.addCodep(emptyCodepdChar);
-                newLine.mergeX(RichCharGrid.fill(
-                    xScalingFactor,
-                    1,
-                    emptyCodepdChar,
-                ));
+                newLine.mergeX(new RichCharGrid([
+                    [new RichChar(null, { ...attributes }, [1, 0], newChar).noSize()]
+                ]));
+                if (attributes.doubleWidth) {
+                    newLine.mergeX(new RichCharGrid([
+                        [new RichChar(null, { ...attributes }, [1, -1], newChar).noSize()]
+                    ]));
+                }
             }
             result.mergeY(newLine, 'start');
         }
         return result;
     }
-    static fill(w: number, h: number, char: RichChar) {
+    static fill(w: number, h: number, char: RichChar<string>) {
         const newGrid = [];
         for (let y = 0; y < h; y += 1) {
             const currGrid = [];
@@ -86,7 +85,7 @@ export class RichCharGrid {
         return this.grid.map((char) => [char[index].copy()]);
     }
 
-    pad(fullPad: FullPadding, fillChar: RichChar) {
+    pad(fullPad: FullPadding, fillChar: RichChar<string>) {
         const safeFillChar = fillChar.noSize();
         this.setHeight(this.height + fullPad[0], 'start', safeFillChar);
         this.setWidth(this.width + fullPad[1], 'end', safeFillChar);
@@ -141,7 +140,7 @@ export class RichCharGrid {
         }
     }
 
-    setHeight(height: number, heightAlign: Align, char: RichChar = new RichChar(' ')) {
+    setHeight(height: number, heightAlign: Align, char = new RichChar(' ')) {
         if (this.height === height) return this;
         if (this.height > height) return this.cutHeight(height, heightAlign);
         const addAmount = height - this.height;

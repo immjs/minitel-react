@@ -7,8 +7,12 @@ const wss = new WebSocketServer({ port: 8080 });
 
 function App() {
     const [time, setTime] = React.useState(Date.now());
+    const [randomValue, setRandomValue] = React.useState(false);
     React.useEffect(() => {
-        setInterval(() => setTime(Date.now()), 500);
+        setInterval(() => {
+            setTime(Date.now());
+            setRandomValue((randomValue) => !randomValue);
+        }, 2_000);
     }, []);
     return (
         <yjoin>
@@ -27,10 +31,7 @@ function App() {
                     </para>
                 </xjoin>
                 <xjoin widthAlign="middle">
-                    <input width={16} autofocus type="password"/>
-                </xjoin>
-                <xjoin widthAlign="middle">
-                    <input width={8} type="password"/>
+                    <para doubleHeight doubleWidth>{ String(randomValue) }</para>
                 </xjoin>
             </yjoin>
         </yjoin>
@@ -39,17 +40,20 @@ function App() {
 
 wss.on('connection', function connection(ws) {
     try {
-        const minitel = new Minitel(createWebSocketStream(ws, { encoding: 'utf8' }), { statusBar: true });
+        const minitel = new Minitel(createWebSocketStream(ws, { decodeStrings: false }), { statusBar: true });
 
         ws.on('message', (data) => console.log({ data }));
 
         render(<App />, minitel);
     } catch (err) {
+        console.log((err as Error).message);
         if ((err as Error).message.includes('readyState')) {
             return; // it does that sometimes
         }
         throw err;
     }
 });
+
+wss.on('error', () => {});
 
 wss.on('listening', () => console.log('I exist!'));//

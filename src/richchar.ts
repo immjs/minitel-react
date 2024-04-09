@@ -1,9 +1,10 @@
 import { CharAttributes } from './types.js';
 
-export class RichChar {
+export class RichChar<T> {
     attributes: CharAttributes;
-    char: string;
-    codependencies: Set<RichChar>;
+    delta: T extends null ? [number, number] : undefined;
+    actualChar: T extends null ? RichChar<string> : undefined;
+    char: T;
     // skip: boolean;
     static getDelimited(attributes: CharAttributes): Pick<CharAttributes, 'bg' | 'underline'> {
         return {
@@ -59,23 +60,33 @@ export class RichChar {
         }
         return result;
     }
-    constructor(char: string, attributes: Partial<CharAttributes> = {}, codeps?: RichChar[]) {
+    constructor(
+        char: T,
+        attributes: Partial<CharAttributes> = {},
+        ...[
+            delta,
+            actualChar,
+        ]: T extends null ? [[number, number], RichChar<string>] : [undefined?, undefined?]
+    ) {
         this.char = char;
-        this.codependencies = new Set();
-        if (codeps) codeps.forEach((char) => this.addCodep(char));
+        this.delta = delta as T extends null ? [number, number] : undefined;
+        this.actualChar = actualChar as T extends null ? RichChar<string> : undefined;
         this.attributes = RichChar.normalizeAttributes(attributes);
     }
-    isEqual(that: RichChar) {
+    isEqual(that: RichChar<string> | RichChar<null>): boolean {
         return this.char === that.char
             && (Object.keys(RichChar.normalizeAttributes(this.attributes)) as (keyof CharAttributes)[])
                 .every((attribute) => that.attributes[attribute] === this.attributes[attribute])
+            && (
+                this.char === null
+                    ? (this.delta![0] == that.delta![0] && this.delta![1] == that.delta![1])
+                        // && this.actualChar!.isEqual(that.actualChar!)
+                    : true
+            )
     }
     copy() {
-        return new RichChar(this.char, this.attributes, [...this.codependencies]);
-    }
-    addCodep(codep: RichChar) {
-        codep.codependencies.add(this);
-        this.codependencies.add(codep);
+        // typescript shall go down to hell
+        return new RichChar(this.char, this.attributes, ...([this.delta, this.actualChar] as T extends null ? [[number, number], RichChar<string>] : [undefined?, undefined?]));
     }
     noSize() {
         const newAttributes = {
@@ -83,6 +94,6 @@ export class RichChar {
             doubleWidth: false,
             doubleHeight: false,
         };
-        return new RichChar(this.char, newAttributes, [...this.codependencies]);
+        return new RichChar(this.char, newAttributes, ...([this.delta, this.actualChar] as T extends null ? [[number, number], RichChar<string>] : [undefined?, undefined?]));
     }
 }

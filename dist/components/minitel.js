@@ -72,7 +72,9 @@ export class Minitel extends Container {
             const line = renderGrid.grid[lineIdx];
             for (let charIdx in line) {
                 const char = line[charIdx];
-                if (this.previousRender.grid[lineIdx][charIdx].isEqual(char)) {
+                if (char.isEqual(this.previousRender.grid[lineIdx][charIdx])
+                    && (char.char != null
+                        || (renderGrid.grid[+lineIdx + char.delta[0]][+charIdx + char.delta[1]].isEqual(this.previousRender.grid[+lineIdx + char.delta[0]][+charIdx + char.delta[1]])))) {
                     if (char.char !== '')
                         skippedACharCounter += 1;
                     lastAttributes = Object.assign({ fg: 7, doubleWidth: false, doubleHeight: false, noBlink: true, invert: false }, RichChar.getDelimited(char.attributes));
@@ -86,7 +88,7 @@ export class Minitel extends Container {
                     const applier = RichChar.getAttributesApplier(diff, lastAttributes);
                     outputString.push(applier);
                     lastAttributes = char.attributes;
-                    outputString.push(char.char);
+                    outputString.push(typeof char.char === 'string' ? char.char : ['', ' '][char.delta[0]]);
                     skippedACharCounter = 0;
                 }
             }

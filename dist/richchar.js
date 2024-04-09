@@ -54,27 +54,27 @@ export class RichChar {
         }
         return result;
     }
-    constructor(char, attributes = {}, codeps) {
+    constructor(char, attributes = {}, ...[delta, actualChar,]) {
         this.char = char;
-        this.codependencies = new Set();
-        if (codeps)
-            codeps.forEach((char) => this.addCodep(char));
+        this.delta = delta;
+        this.actualChar = actualChar;
         this.attributes = RichChar.normalizeAttributes(attributes);
     }
     isEqual(that) {
         return this.char === that.char
             && Object.keys(RichChar.normalizeAttributes(this.attributes))
-                .every((attribute) => that.attributes[attribute] === this.attributes[attribute]);
+                .every((attribute) => that.attributes[attribute] === this.attributes[attribute])
+            && (this.char === null
+                ? (this.delta[0] == that.delta[0] && this.delta[1] == that.delta[1])
+                // && this.actualChar!.isEqual(that.actualChar!)
+                : true);
     }
     copy() {
-        return new RichChar(this.char, this.attributes, [...this.codependencies]);
-    }
-    addCodep(codep) {
-        codep.codependencies.add(this);
-        this.codependencies.add(codep);
+        // typescript shall go down to hell
+        return new RichChar(this.char, this.attributes, ...[this.delta, this.actualChar]);
     }
     noSize() {
         const newAttributes = Object.assign(Object.assign({}, this.attributes), { doubleWidth: false, doubleHeight: false });
-        return new RichChar(this.char, newAttributes, [...this.codependencies]);
+        return new RichChar(this.char, newAttributes, ...[this.delta, this.actualChar]);
     }
 }

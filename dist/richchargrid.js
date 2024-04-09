@@ -31,19 +31,22 @@ export class RichCharGrid {
         for (let char of line) {
             const newChar = new RichChar(char, attributes);
             allNewChars.push(newChar);
-            const emptyCodepdChar = new RichChar('', attributes);
-            emptyCodepdChar.addCodep(newChar);
+            const emptyCodepdChar = new RichChar(null, attributes, [0, -1], newChar).noSize();
             result.mergeX(new RichCharGrid(attributes.doubleWidth
                 ? [[newChar, emptyCodepdChar]]
                 : [[newChar]]));
         }
         if (attributes.doubleHeight) {
-            const xScalingFactor = attributes.doubleWidth ? 2 : 1;
             const newLine = new RichCharGrid([[]]);
             for (let newChar of allNewChars) {
-                const emptyCodepdChar = new RichChar(' ', attributes).noSize();
-                newChar.addCodep(emptyCodepdChar);
-                newLine.mergeX(RichCharGrid.fill(xScalingFactor, 1, emptyCodepdChar));
+                newLine.mergeX(new RichCharGrid([
+                    [new RichChar(null, Object.assign({}, attributes), [1, 0], newChar).noSize()]
+                ]));
+                if (attributes.doubleWidth) {
+                    newLine.mergeX(new RichCharGrid([
+                        [new RichChar(null, Object.assign({}, attributes), [1, -1], newChar).noSize()]
+                    ]));
+                }
             }
             result.mergeY(newLine, 'start');
         }

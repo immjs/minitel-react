@@ -106,7 +106,17 @@ export class Minitel extends Container<ContainerAttributes, { key: [string] }> {
             for (let charIdx in line) {
                 const char = line[charIdx];
 
-                if (this.previousRender.grid[lineIdx][charIdx].isEqual(char)) {
+                if (
+                    char.isEqual(this.previousRender.grid[lineIdx][charIdx])
+                    && (
+                        char.char != null
+                        || (
+                            renderGrid.grid[+lineIdx + char.delta[0]][+charIdx + char.delta[1]].isEqual(
+                                this.previousRender.grid[+lineIdx + char.delta[0]][+charIdx + char.delta[1]]
+                            )
+                        )
+                    )
+                ) {
                     if (char.char !== '') skippedACharCounter += 1;
                     lastAttributes = {
                         fg: 7,
@@ -127,7 +137,7 @@ export class Minitel extends Container<ContainerAttributes, { key: [string] }> {
 
                     lastAttributes = char.attributes;
 
-                    outputString.push(char.char)
+                    outputString.push(typeof char.char === 'string' ? char.char : ['', ' '][char.delta[0]])
                     skippedACharCounter = 0;
                 }
             }
