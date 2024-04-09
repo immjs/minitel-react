@@ -12,9 +12,16 @@ export class Minitel extends Container {
         this.lastImmediate = null;
         this.minitel = this;
         this.children = new SingletonArray();
-        this.settings = Object.assign({ statusBar: false }, settings);
+        this.settings = Object.assign({ statusBar: false, localEcho: false }, settings);
         this.stream = stream;
         this.previousRender = RichCharGrid.fill(40, 24 + +this.settings.statusBar, new RichChar(' '));
+        // Take care of localEcho
+        this.stream.write([
+            '\x1b\x3b',
+            this.settings.localEcho ? '\x61' : '\x60',
+            '\x58',
+            '\x52',
+        ].join(''));
         this.stream.write('\x1f\x40\x41\x18\x0c'); // Clear status; clear screen
         let acc = '';
         let howManyToExpect = 0;

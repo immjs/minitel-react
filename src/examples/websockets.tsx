@@ -40,7 +40,9 @@ function App() {
 wss.on('connection', function connection(ws) {
     try {
         const minitel = new Minitel(createWebSocketStream(ws, { encoding: 'utf8' }), { statusBar: true });
-      
+
+        ws.on('message', (data) => console.log({ data }));
+
         render(<App />, minitel);
     } catch (err) {
         if ((err as Error).message.includes('readyState')) {

@@ -8,6 +8,7 @@ import { FiberRoot } from 'react-reconciler';
 import { Focusable } from '../abstract/focusable.js';
 export interface MinitelSettings {
     statusBar: boolean;
+    localEcho: boolean;
 }
 export declare class Minitel extends Container {
     static defaultScreenAttributes: CharAttributes;

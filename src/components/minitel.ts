@@ -12,6 +12,7 @@ import { expectNextChars } from '../inputConstants.js';
 
 export interface MinitelSettings {
     statusBar: boolean;
+    localEcho: boolean;
 }
 
 export class Minitel extends Container {
@@ -37,10 +38,20 @@ export class Minitel extends Container {
         this.children = new SingletonArray<MinitelObject>();
         this.settings = {
             statusBar: false,
+            localEcho: false,
             ...settings,
         };
         this.stream = stream;
         this.previousRender = RichCharGrid.fill(40, 24 + +this.settings.statusBar, new RichChar(' '));
+
+        // Take care of localEcho
+        this.stream.write([
+            '\x1b\x3b',
+            this.settings.localEcho ? '\x61' : '\x60',
+            '\x58',
+            '\x52',
+        ].join(''));
+
         this.stream.write('\x1f\x40\x41\x18\x0c'); // Clear status; clear screen
 
         let acc = '';
