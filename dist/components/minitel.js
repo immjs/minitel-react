@@ -157,8 +157,9 @@ export class Minitel extends Container {
         this.stream.write(this.renderString());
     }
     useKeyboard(callback) {
-        return React.useEffect(() => {
-            this.on('key', (data) => callback(data));
+        React.useEffect(() => {
+            this.on('key', callback);
+            return () => void this.off('key', callback);
         }, []);
     }
 }
