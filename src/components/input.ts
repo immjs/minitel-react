@@ -13,6 +13,7 @@ export class Input extends MinitelObject<InputAttributes, { key: [string] }> imp
         height: 1,
         type: 'text',
         autofocus: false,
+        onChange: () => {},
     };
     defaultAttributes = Input.defaultAttributes;
     value = '';
@@ -25,9 +26,11 @@ export class Input extends MinitelObject<InputAttributes, { key: [string] }> imp
         this.on('key', (key) => {
             if (/^[a-zA-Z0-9 ]$/gi.test(key)) {
                 this.value += key;
+                if (attributes.onChange) attributes.onChange(this);
                 minitel.renderToStream();
             } else if (key === '\x13\x47') {
                 this.value = this.value.slice(0, -1);
+                if (attributes.onChange) attributes.onChange(this);
                 minitel.renderToStream();
             }
         });
@@ -48,4 +51,5 @@ export class Input extends MinitelObject<InputAttributes, { key: [string] }> imp
 
 export interface InputAttributes extends FocusableAttributes {
     type: 'text' | 'password';
+    onChange: (input: Input) => void,
 }

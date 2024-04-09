@@ -1,7 +1,7 @@
 /// <reference types="node" resolution-mode="require"/>
 /// <reference types="node" resolution-mode="require"/>
 import { Duplex } from 'stream';
-import { Container } from './container.js';
+import { Container, ContainerAttributes } from './container.js';
 import { RichCharGrid } from '../richchargrid.js';
 import { CharAttributes } from '../types.js';
 import { FiberRoot } from 'react-reconciler';
@@ -10,7 +10,9 @@ export interface MinitelSettings {
     statusBar: boolean;
     localEcho: boolean;
 }
-export declare class Minitel extends Container {
+export declare class Minitel extends Container<ContainerAttributes, {
+    key: [string];
+}> {
     static defaultScreenAttributes: CharAttributes;
     stream: Duplex;
     previousRender: RichCharGrid;

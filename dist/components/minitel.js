@@ -32,6 +32,7 @@ export class Minitel extends Container {
                 acc += char;
                 howManyToExpect = Math.max(0, howManyToExpect + (expectNextChars[acc] || 0));
                 if (howManyToExpect === 0) {
+                    this.emit('key', acc);
                     if (acc.match(/^([a-z0-9 ]|\x13\x47)$/gi)) {
                         const focusedObj = this.focusedObj;
                         if (focusedObj) {
@@ -157,7 +158,7 @@ export class Minitel extends Container {
     }
     useKeyboard(callback) {
         return React.useEffect(() => {
-            this.stream.on('data', (dat) => callback(dat));
+            this.on('key', (data) => callback(data));
         }, []);
     }
 }

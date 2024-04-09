@@ -12,10 +12,14 @@ export class Input extends MinitelObject {
         this.on('key', (key) => {
             if (/^[a-zA-Z0-9 ]$/gi.test(key)) {
                 this.value += key;
+                if (attributes.onChange)
+                    attributes.onChange(this);
                 minitel.renderToStream();
             }
             else if (key === '\x13\x47') {
                 this.value = this.value.slice(0, -1);
+                if (attributes.onChange)
+                    attributes.onChange(this);
                 minitel.renderToStream();
             }
         });
@@ -32,4 +36,4 @@ export class Input extends MinitelObject {
         return [0, Math.max(this.value.length)];
     }
 }
-Input.defaultAttributes = Object.assign(Object.assign({}, MinitelObject.defaultAttributes), { fillChar: '.', width: 8, height: 1, type: 'text', autofocus: false });
+Input.defaultAttributes = Object.assign(Object.assign({}, MinitelObject.defaultAttributes), { fillChar: '.', width: 8, height: 1, type: 'text', autofocus: false, onChange: () => { } });

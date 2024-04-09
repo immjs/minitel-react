@@ -1,5 +1,5 @@
 import { Duplex } from 'stream';
-import { Container } from './container.js';
+import { Container, ContainerAttributes } from './container.js';
 import { RichCharGrid } from '../richchargrid.js';
 import { CharAttributes, MinitelObjectAttributes } from '../types.js';
 import { SingletonArray } from '../singleton.js';
@@ -15,7 +15,7 @@ export interface MinitelSettings {
     localEcho: boolean;
 }
 
-export class Minitel extends Container {
+export class Minitel extends Container<ContainerAttributes, { key: [string] }> {
     static defaultScreenAttributes: CharAttributes = {
         fg: 7,
         bg: 0,
@@ -63,6 +63,7 @@ export class Minitel extends Container {
                 acc += char;
                 howManyToExpect = Math.max(0, howManyToExpect + (expectNextChars[acc] || 0));
                 if (howManyToExpect === 0) {
+                    this.emit('key', acc);
                     if (acc.match(/^([a-z0-9 ]|\x13\x47)$/gi)) {
                         const focusedObj = this.focusedObj;
                         if (focusedObj) {
@@ -200,7 +201,7 @@ export class Minitel extends Container {
     }
     useKeyboard(callback: (key: string) => void) {
         return React.useEffect(() => {
-            this.stream.on('data', (dat) => callback(dat));
+            this.on('key', (data) => callback(data));
         }, []);
     }
     // sendProtocole(seq: string) {

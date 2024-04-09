@@ -5,14 +5,14 @@ import { Align, MinitelObjectAttributes } from '../types.js';
 import { alignInvrt, inheritedProps } from '../utils.js';
 import type { Minitel } from './minitel.js';
 
-export class Container extends MinitelObject<ContainerAttributes> {
+export class Container<T extends ContainerAttributes = ContainerAttributes, U extends Record<string, any[]> = Record<string, any[]>> extends MinitelObject<T, U> {
     static defaultAttributes: ContainerAttributes = {
         ...MinitelObject.defaultAttributes,
         widthAlign: 'start',
         heightAlign: 'start',
     };
-    defaultAttributes = Container.defaultAttributes;
-    constructor(children = [], attributes: Partial<ContainerAttributes>, minitel: Minitel) {
+    defaultAttributes = Container.defaultAttributes as T;
+    constructor(children = [], attributes: Partial<T>, minitel: Minitel) {
         if (children.length > 1) throw new Error('Container must only include one element');
         super([], attributes, minitel);
         this.children = new SingletonArray<MinitelObject>();
