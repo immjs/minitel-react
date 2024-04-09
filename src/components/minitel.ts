@@ -203,7 +203,7 @@ export class Minitel extends Container<ContainerAttributes, { key: [string] }> {
         React.useEffect(() => {
             this.on('key', callback);
             return () => void this.off('key', callback);
-        }, []);
+        });
     }
     // sendProtocole(seq: string) {
     //     this.stream.write(`\x1b${['\x39', '\x3A', '\x3B'][seq.length]}${seq}`);

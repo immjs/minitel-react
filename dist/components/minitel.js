@@ -160,7 +160,7 @@ export class Minitel extends Container {
         React.useEffect(() => {
             this.on('key', callback);
             return () => void this.off('key', callback);
-        }, []);
+        });
     }
 }
 Minitel.defaultScreenAttributes = {
