@@ -30,7 +30,7 @@ export class Input extends MinitelObject {
         return RichCharGrid.fromLine({
             text: this.value,
             password: '-'.repeat(this.value.length),
-        }[attributes.type].slice(-attributes.width), {}).setWidth(attributes.width, 'end', fillChar);
+        }[attributes.type].slice(-attributes.width), inheritMe).setWidth(attributes.width, 'end', fillChar);
     }
     get focusCursorAt() {
         return [0, Math.max(this.value.length)];
