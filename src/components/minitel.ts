@@ -138,14 +138,19 @@ export class Minitel extends Container<ContainerAttributes, { key: [string] }> {
         this.previousRender = renderGrid.copy();
 
         if (this.focusedObj && 'focusCursorAt' in this.focusedObj && this.focusedObj.focusCursorAt != null) {
-            const { x, y, w, h } = renderGrid.locationDescriptors.get(this.focusedObj)!;
-            const [cursorDeltaY, cursorDeltaX] = this.focusedObj.focusCursorAt;
-
-            outputString.push(this.toCursorMove(
-                Math.min(y + cursorDeltaY, y + h - 1),
-                Math.min(x + cursorDeltaX, x + w - 1),
-            ));
-            outputString.push('\x11');
+            const locationDescriptor = renderGrid.locationDescriptors.get(this.focusedObj);
+            if (locationDescriptor) {
+                const { x, y, w, h } = locationDescriptor;
+                const [cursorDeltaY, cursorDeltaX] = this.focusedObj.focusCursorAt;
+    
+                outputString.push(this.toCursorMove(
+                    Math.min(y + cursorDeltaY, y + h - 1),
+                    Math.min(x + cursorDeltaX, x + w - 1),
+                ));
+                outputString.push('\x11');
+            } else {
+                this.focusedObj = null;
+            }
         }
         // if i get bullied in prépa, it will be because of this
         let preOptimized = outputString.join('\x80');
