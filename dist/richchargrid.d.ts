@@ -18,7 +18,7 @@ export declare class RichCharGrid {
     cutWidth(width: number, widthAlign: Align): this;
     setHeight(height: number, heightAlign: Align, char?: RichChar): this;
     setWidth(width: number, widthAlign: Align, char?: RichChar): this;
-    mergePropertyDescriptors(operand: RichCharGrid): void;
+    mergeLocationDescriptors(operand: RichCharGrid): void;
     mergeY(operand: RichCharGrid, heightAlign?: string): void;
     mergeX(operand: RichCharGrid, widthAlign?: string): void;
     toString(): string;

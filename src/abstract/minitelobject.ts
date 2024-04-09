@@ -5,6 +5,7 @@ import { RichCharGrid } from '../richchargrid.js';
 import { MinitelObjectAttributes } from '../types.js';
 import { inheritedProps, padding } from '../utils.js';
 import { Focusable } from './focusable.js';
+import { LocationDescriptor } from '../locationdescriptor.js';
 
 export class MinitelObject<T extends MinitelObjectAttributes = MinitelObjectAttributes, U extends Record<string, any[]> = Record<string, any[]>> extends EventEmitter<U> {
     children: MinitelObject[];
@@ -67,7 +68,7 @@ export class MinitelObject<T extends MinitelObjectAttributes = MinitelObjectAttr
         }));
 
         // Descriptor before pad, is this the right choice?
-        if (this.keepElmDesc) result.locationDescriptors.add(this);
+        if (this.keepElmDesc) result.locationDescriptors.add(this, new LocationDescriptor(0, 0, result.width, result.height));
 
         result.pad(pad, new RichChar(attributes.fillChar, attributes).noSize());
 

@@ -1,6 +1,7 @@
 import { EventEmitter } from 'node:events';
 import { RichChar } from '../richchar.js';
 import { inheritedProps, padding } from '../utils.js';
+import { LocationDescriptor } from '../locationdescriptor.js';
 export class MinitelObject extends EventEmitter {
     constructor(children, attributes, minitel) {
         super();
@@ -38,7 +39,7 @@ export class MinitelObject extends EventEmitter {
         const result = this.render(attributes, inheritedProps(Object.assign(Object.assign(Object.assign({}, inheritedAttributes), this.attributes), forcedAttributes)));
         // Descriptor before pad, is this the right choice?
         if (this.keepElmDesc)
-            result.locationDescriptors.add(this);
+            result.locationDescriptors.add(this, new LocationDescriptor(0, 0, result.width, result.height));
         result.pad(pad, new RichChar(attributes.fillChar, attributes).noSize());
         return result;
     }

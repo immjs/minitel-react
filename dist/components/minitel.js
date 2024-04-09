@@ -37,7 +37,6 @@ export class Minitel extends Container {
                             '\x13\x42': -1,
                         };
                         this.focusDelta(deltaTable[acc]);
-                        console.log('focused', deltaTable[acc]);
                         this.renderToStream();
                     }
                     acc = '';
@@ -91,9 +90,9 @@ export class Minitel extends Container {
         }
         this.previousRender = renderGrid.copy();
         if (this.focusedObj && 'focusCursorAt' in this.focusedObj && this.focusedObj.focusCursorAt != null) {
-            const { x: elmX, y: elmY } = renderGrid.locationDescriptors.get(this.focusedObj);
+            const { x, y, w, h } = renderGrid.locationDescriptors.get(this.focusedObj);
             const [cursorDeltaY, cursorDeltaX] = this.focusedObj.focusCursorAt;
-            outputString.push(this.toCursorMove(elmY + cursorDeltaY, elmX + cursorDeltaX));
+            outputString.push(this.toCursorMove(Math.min(y + cursorDeltaY, y + h - 1), Math.min(x + cursorDeltaX, x + w - 1)));
             outputString.push('\x11');
         }
         // if i get bullied in prépa, it will be because of this

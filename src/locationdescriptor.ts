@@ -3,16 +3,24 @@ import type{ MinitelObject } from './abstract/minitelobject.js';
 export class LocationDescriptor {
     y: number;
     x: number;
-    constructor(y: number, x: number) {
+    w: number;
+    h: number;
+    constructor(y: number, x: number, w: number, h: number) {
         this.y = y;
         this.x = x;
+        this.w = w;
+        this.h = h;
     }
     applyDelta(dy: number, dx: number) {
         this.y += dy;
         this.x += dx;
     }
     copy() {
-        return new LocationDescriptor(this.y, this.x);
+        return new LocationDescriptor(this.y, this.x, this.w, this.h);
+    }
+    cut(h: number, w: number) {
+        this.h = Math.min(h, this.h);
+        this.w = Math.min(w, this.w);
     }
 }
 
@@ -29,6 +37,11 @@ export class LocationDescriptors {
         this.lookupAt.forEach((v) => v.applyDelta(dy, dx));
     }
 
+    cut(h: number, w: number) {
+        this.locs.forEach((v) => v.cut(h - v.y,  - v.x));
+        this.lookupAt.forEach((v) => v.cut(h, w));
+    }
+
     has(key: MinitelObject): boolean {
         return this.locs.has(key) || this.lookupAt.some((v) => v.has(key));
     }
@@ -39,7 +52,7 @@ export class LocationDescriptors {
         return this.lookupAt.find((v) => v.has(key))?.get(key);
     }
 
-    add(key: MinitelObject, loc: LocationDescriptor = new LocationDescriptor(0, 0)) {
+    add(key: MinitelObject, loc: LocationDescriptor) {
         this.locs.set(key, loc);
     }
 

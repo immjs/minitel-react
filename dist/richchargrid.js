@@ -96,6 +96,7 @@ export class RichCharGrid {
                 if (heightAlign === 'start')
                     this.locationDescriptors.applyDelta(-cutAmount, 0);
                 this.grid.splice(cutStart, cutAmount);
+                this.locationDescriptors.cut(this.height, this.width);
                 return this;
             case 'middle':
                 const topToMiddle = Math.floor(cutAmount / 2);
@@ -114,6 +115,7 @@ export class RichCharGrid {
                 if (widthAlign === 'start')
                     this.locationDescriptors.applyDelta(0, -cutAmount);
                 this.grid.forEach((line) => line.splice(cutStart, cutAmount));
+                this.locationDescriptors.cut(this.height, this.width);
                 return this;
             case 'middle':
                 const leftToMiddle = Math.floor(cutAmount / 2);
@@ -162,7 +164,7 @@ export class RichCharGrid {
                 return this;
         }
     }
-    mergePropertyDescriptors(operand) {
+    mergeLocationDescriptors(operand) {
         // console.log('MergePropertyDescriptors', this.locationDescriptors, operand.locationDescriptors);
         if (!operand.locationDescriptors.isEmpty)
             this.locationDescriptors.merge(operand.locationDescriptors);
@@ -188,7 +190,7 @@ export class RichCharGrid {
                 operand.locationDescriptors.applyDelta(prevHeight, 0);
                 break;
         }
-        this.mergePropertyDescriptors(operand);
+        this.mergeLocationDescriptors(operand);
     }
     mergeX(operand, widthAlign = 'end') {
         if (operand.width === 0)
@@ -219,7 +221,7 @@ export class RichCharGrid {
                 operand.locationDescriptors.applyDelta(0, prevWidth);
                 break;
         }
-        this.mergePropertyDescriptors(operand);
+        this.mergeLocationDescriptors(operand);
     }
     toString() {
         return `=====RICHCHARGRID=====
