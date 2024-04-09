@@ -88,16 +88,16 @@ export class YJoin extends MinitelObject<YJoinAttributes> {
         let gapCumul = 0;
 
         for (let render of renders) {
-            if (attributes.widthAlign !== 'stretch') render.setWidth(width, alignInvrt[attributes.widthAlign], fillChar);
             if (render !== renders[0]) {
                 const gapConstituent = new RichCharGrid([[]]);
                 const lastCumul = gapCumul;
                 gapCumul += gapHeight;
-                gapConstituent.setHeight(Math.round(gapCumul - lastCumul), 'end', fillChar);
+                gapConstituent.setHeight(Math.round(gapCumul) - Math.round(lastCumul), 'end', fillChar);
                 gapConstituent.setWidth(width, 'end', fillChar);
                 result.mergeY(gapConstituent);
             }
-            // console.log(render.locationDescriptors);
+
+            if (attributes.widthAlign !== 'stretch') render.setWidth(width, alignInvrt[attributes.widthAlign], fillChar);
             result.mergeY(render);
         } 
         if (attributes.height != null) result.setHeight(attributes.height, alignInvrt[attributes.heightAlign], fillChar);

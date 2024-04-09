@@ -26,8 +26,8 @@ export class Container<T extends ContainerAttributes = ContainerAttributes, U ex
             ...(attributes.height != null ? { height: attributes.height } : {}),
         });
 
-        if (attributes.width) render.setWidth(attributes.width, alignInvrt[attributes.widthAlign], fillChar);
         if (attributes.height) render.setHeight(attributes.height, alignInvrt[attributes.heightAlign], fillChar);
+        if (attributes.width) render.setWidth(attributes.width, alignInvrt[attributes.widthAlign], fillChar);
 
         // console.log({ width: attributes.width, height: attributes.height, render: render.toString() })
 

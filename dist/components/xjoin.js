@@ -65,16 +65,16 @@ export class XJoin extends MinitelObject {
         }
         let gapCumul = 0;
         for (let render of renders) {
-            if (attributes.heightAlign !== 'stretch')
-                render.setHeight(height, alignInvrt[attributes.heightAlign], fillChar);
             if (render !== renders[0]) {
                 const gapConstituent = new RichCharGrid([]);
                 const lastCumul = gapCumul;
                 gapCumul += gapWidth;
-                gapConstituent.setWidth(Math.round(gapCumul) - Math.round(lastCumul), 'end', fillChar);
                 gapConstituent.setHeight(height, 'end', fillChar);
+                gapConstituent.setWidth(Math.round(gapCumul) - Math.round(lastCumul), 'end', fillChar);
                 result.mergeX(gapConstituent);
             }
+            if (attributes.heightAlign !== 'stretch')
+                render.setHeight(height, alignInvrt[attributes.heightAlign], fillChar);
             result.mergeX(render);
         }
         if (attributes.width != null)

@@ -5,6 +5,7 @@ import { Align, CharAttributes, FullPadding, Padding } from './types.js';
 export class RichCharGrid {
     grid: RichChar[][];
     locationDescriptors: LocationDescriptors;
+    _width: number = 0;
     constructor(grid: RichChar[][] = []) {
         this.grid = grid;
         this.locationDescriptors = new LocationDescriptors()

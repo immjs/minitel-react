@@ -15,10 +15,10 @@ export class Container extends MinitelObject {
     render(attributes, inheritMe) {
         const fillChar = new RichChar(attributes.fillChar, attributes).noSize();
         const render = this.children[0].renderWrapper(inheritMe, Object.assign(Object.assign({}, (attributes.width != null ? { width: attributes.width } : {})), (attributes.height != null ? { height: attributes.height } : {})));
-        if (attributes.width)
-            render.setWidth(attributes.width, alignInvrt[attributes.widthAlign], fillChar);
         if (attributes.height)
             render.setHeight(attributes.height, alignInvrt[attributes.heightAlign], fillChar);
+        if (attributes.width)
+            render.setWidth(attributes.width, alignInvrt[attributes.widthAlign], fillChar);
         // console.log({ width: attributes.width, height: attributes.height, render: render.toString() })
         return render;
     }

@@ -2,6 +2,7 @@ import { LocationDescriptors } from './locationdescriptor.js';
 import { RichChar } from './richchar.js';
 export class RichCharGrid {
     constructor(grid = []) {
+        this._width = 0;
         this.grid = grid;
         this.locationDescriptors = new LocationDescriptors();
         this.width; // run check on getter

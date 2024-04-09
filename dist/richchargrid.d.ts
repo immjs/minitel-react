@@ -4,6 +4,7 @@ import { Align, CharAttributes, FullPadding } from './types.js';
 export declare class RichCharGrid {
     grid: RichChar[][];
     locationDescriptors: LocationDescriptors;
+    _width: number;
     constructor(grid?: RichChar[][]);
     mostCommonAttribute(attribute: 'fg' | 'invert' | 'noBlink'): any;
     static fromLine(line: string | string[], attributes: Partial<CharAttributes>): RichCharGrid;
