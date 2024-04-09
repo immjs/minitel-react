@@ -41,7 +41,7 @@ export class YJoin extends MinitelObject {
         const result = new RichCharGrid();
         const width = attributes.widthAlign === 'stretch'
             ? widthIfStretch
-            : Math.max(...renders.map((v) => v.width));
+            : attributes.width || Math.max(...renders.map((v) => v.width));
         if (renders.length === 0)
             return RichCharGrid.fill(attributes.width || 0, attributes.height || 0, fillChar);
         const contentsHeight = renders.reduce((c, v) => c + v.height, 0);

@@ -63,7 +63,7 @@ export class XJoin extends MinitelObject<XJoinAttributes> {
 
         const height = attributes.heightAlign === 'stretch'
             ? heightIfStretch
-            : Math.max(...renders.map((v) => v.height));
+            : attributes.height || Math.max(...renders.map((v) => v.height));
 
         if (renders.length === 0) return RichCharGrid.fill(attributes.width || 0, attributes.height || 0, fillChar);
 
