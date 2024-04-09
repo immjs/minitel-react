@@ -25,7 +25,7 @@ let lastImmediate: NodeJS.Immediate | null = null;
 
 const MiniRenderer = Reconciler<
     keyof typeof elements,
-    MinitelObjectAttributes & { children: MinitelObject },
+    MinitelObjectAttributes & { children: MinitelObject[] },
     Minitel,
     MinitelObject,
     TextNode,
@@ -76,7 +76,10 @@ const MiniRenderer = Reconciler<
     prepareUpdate() {
         return {};
     },
-    commitUpdate(instance) {
+    commitUpdate(instance, _, __, ___, newContent) {
+        const { children: newChildren, ...newProps } = newContent;
+
+        instance.attributes = newProps;
         instance.minitel.queueImmediateRenderToStream();
     },
     clearContainer(container) {

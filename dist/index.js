@@ -60,7 +60,9 @@ const MiniRenderer = Reconciler({
     prepareUpdate() {
         return {};
     },
-    commitUpdate(instance) {
+    commitUpdate(instance, _, __, ___, newContent) {
+        const { children: newChildren } = newContent, newProps = __rest(newContent, ["children"]);
+        instance.attributes = newProps;
         instance.minitel.queueImmediateRenderToStream();
     },
     clearContainer(container) {
