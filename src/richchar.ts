@@ -73,10 +73,13 @@ export class RichChar<T> {
         this.actualChar = actualChar as T extends null ? RichChar<string> : undefined;
         this.attributes = RichChar.normalizeAttributes(attributes);
     }
+    areAttributesEqual(attributes: CharAttributes): boolean {
+        return (Object.keys(this.attributes) as (keyof CharAttributes)[])
+            .every((attribute) => attributes[attribute] === this.attributes[attribute])
+    }
     isEqual(that: RichChar<string> | RichChar<null>): boolean {
         return this.char === that.char
-            && (Object.keys(RichChar.normalizeAttributes(this.attributes)) as (keyof CharAttributes)[])
-                .every((attribute) => that.attributes[attribute] === this.attributes[attribute])
+            && this.areAttributesEqual(that.attributes)
             && (
                 this.char === null
                     ? (this.delta![0] == that.delta![0] && this.delta![1] == that.delta![1])

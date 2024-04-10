@@ -66,18 +66,22 @@ export class Minitel extends Container {
         const outputString = [];
         let lastAttributes = Minitel.defaultScreenAttributes;
         let skippedACharCounter = 0;
+        let lastChar = null;
         for (let lineIdx in renderGrid.grid) {
             if (+lineIdx === 0 && this.settings.statusBar)
                 outputString.push('\x1f\x40\x41');
             const line = renderGrid.grid[lineIdx];
             for (let charIdx in line) {
                 const char = line[charIdx];
-                if (char.isEqual(this.previousRender.grid[lineIdx][charIdx])
+                const prevChar = this.previousRender.grid[lineIdx][charIdx];
+                if (char.isEqual(prevChar)
+                    && (lastChar == null
+                        || (lastChar[0].attributes.bg === char.attributes.bg)
+                            === (lastChar[1].attributes.bg === prevChar.attributes.bg))
                     && (char.char != null
                         || (renderGrid.grid[+lineIdx + char.delta[0]][+charIdx + char.delta[1]].isEqual(this.previousRender.grid[+lineIdx + char.delta[0]][+charIdx + char.delta[1]])))) {
-                    if (char.char !== '')
-                        skippedACharCounter += 1;
-                    lastAttributes = Object.assign({ fg: 7, doubleWidth: false, doubleHeight: false, noBlink: true, invert: false }, RichChar.getDelimited(char.attributes));
+                    skippedACharCounter += 1;
+                    lastAttributes = Object.assign({ fg: 7, doubleWidth: false, doubleHeight: false, noBlink: true, invert: false }, RichChar.getDelimited(prevChar.attributes));
                 }
                 else {
                     if (skippedACharCounter !== 0) {
@@ -91,6 +95,7 @@ export class Minitel extends Container {
                     outputString.push(typeof char.char === 'string' ? char.char : ['', ' '][char.delta[0]]);
                     skippedACharCounter = 0;
                 }
+                lastChar = [char, prevChar];
             }
             if (lastAttributes.doubleHeight)
                 outputString.push('\x0b');

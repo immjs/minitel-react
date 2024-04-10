@@ -5,14 +5,14 @@ import React from 'react';
 const wss = new WebSocketServer({ port: 8080 });
 function App() {
     const [time, setTime] = React.useState(Date.now());
-    const [randomValue, setRandomValue] = React.useState(false);
+    const [randomValue, setRandomValue] = React.useState(0);
     React.useEffect(() => {
         setInterval(() => {
             setTime(Date.now());
-            setRandomValue((randomValue) => !randomValue);
+            setRandomValue((r) => ({ '0': 3, '3': 1 }[r]));
         }, 2000);
     }, []);
-    return (_jsxs("yjoin", { children: [_jsx("xjoin", { invert: true, widthAlign: "middle", children: Intl.DateTimeFormat('en-US', { timeStyle: 'medium' }).format(time) }), _jsxs("yjoin", { flexGrow: true, heightAlign: "middle", gap: "space-evenly", children: [_jsxs("xjoin", { widthAlign: "middle", children: [_jsx("para", { bg: 7, fg: 0, doubleHeight: true, children: " " }), _jsx("para", { doubleHeight: true, doubleWidth: true, bg: 7, fg: 0, children: "Up @ 9600 bauds" }), _jsx("para", { bg: 7, fg: 0, doubleHeight: true, children: " " })] }), _jsx("xjoin", { children: _jsx("para", { children: App.toString() }) }), _jsx("xjoin", { widthAlign: "middle", children: _jsx("para", { doubleHeight: true, doubleWidth: true, children: String(randomValue) }) })] })] }));
+    return (_jsxs("yjoin", { children: [_jsx("xjoin", { invert: true, widthAlign: "middle", children: Intl.DateTimeFormat('en-US', { timeStyle: 'medium' }).format(time) }), _jsxs("yjoin", { flexGrow: true, heightAlign: "middle", gap: "space-evenly", children: [_jsxs("xjoin", { widthAlign: "middle", children: [_jsx("para", { bg: 7, fg: 0, doubleHeight: true, children: " " }), _jsx("para", { doubleHeight: true, doubleWidth: true, bg: 7, fg: 0, children: "Up @ 9600 bauds" }), _jsx("para", { bg: 7, fg: 0, doubleHeight: true, children: " " })] }), _jsx("xjoin", { children: _jsx("para", { children: App.toString() }) }), _jsxs("yjoin", { widthAlign: "middle", children: [_jsxs("para", { doubleHeight: true, doubleWidth: true, fg: 0, bg: 7, children: [" ", 'I'.repeat(randomValue), " "] }), _jsx("input", { autofocus: true })] })] })] }));
 }
 ;
 wss.on('connection', function connection(ws) {

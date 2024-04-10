@@ -60,10 +60,13 @@ export class RichChar {
         this.actualChar = actualChar;
         this.attributes = RichChar.normalizeAttributes(attributes);
     }
+    areAttributesEqual(attributes) {
+        return Object.keys(this.attributes)
+            .every((attribute) => attributes[attribute] === this.attributes[attribute]);
+    }
     isEqual(that) {
         return this.char === that.char
-            && Object.keys(RichChar.normalizeAttributes(this.attributes))
-                .every((attribute) => that.attributes[attribute] === this.attributes[attribute])
+            && this.areAttributesEqual(that.attributes)
             && (this.char === null
                 ? (this.delta[0] == that.delta[0] && this.delta[1] == that.delta[1])
                 // && this.actualChar!.isEqual(that.actualChar!)

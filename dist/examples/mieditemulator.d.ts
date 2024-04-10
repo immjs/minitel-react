@@ -1,1 +1,1 @@
-import './websockets.js';
+export {};

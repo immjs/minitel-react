@@ -100,14 +100,21 @@ export class Minitel extends Container<ContainerAttributes, { key: [string] }> {
         const outputString = [];
         let lastAttributes: Readonly<CharAttributes> = Minitel.defaultScreenAttributes;
         let skippedACharCounter = 0;
+        let lastChar: [RichChar<string> | RichChar<null>, RichChar<string> | RichChar<null>] | null = null;
         for (let lineIdx in renderGrid.grid) {
             if (+lineIdx === 0 && this.settings.statusBar) outputString.push('\x1f\x40\x41');
             const line = renderGrid.grid[lineIdx];
             for (let charIdx in line) {
                 const char = line[charIdx];
+                const prevChar = this.previousRender.grid[lineIdx][charIdx];
 
                 if (
-                    char.isEqual(this.previousRender.grid[lineIdx][charIdx])
+                    char.isEqual(prevChar)
+                    && (
+                        lastChar == null
+                        || (lastChar[0].attributes.bg === char.attributes.bg)
+                            === (lastChar[1].attributes.bg === prevChar.attributes.bg)
+                    )
                     && (
                         char.char != null
                         || (
@@ -117,14 +124,14 @@ export class Minitel extends Container<ContainerAttributes, { key: [string] }> {
                         )
                     )
                 ) {
-                    if (char.char !== '') skippedACharCounter += 1;
+                    skippedACharCounter += 1;
                     lastAttributes = {
                         fg: 7,
                         doubleWidth: false,
                         doubleHeight: false,
                         noBlink: true,
                         invert: false,
-                        ...RichChar.getDelimited(char.attributes),
+                        ...RichChar.getDelimited(prevChar.attributes),
                     };
                 } else {
                     if (skippedACharCounter !== 0) {
@@ -140,6 +147,7 @@ export class Minitel extends Container<ContainerAttributes, { key: [string] }> {
                     outputString.push(typeof char.char === 'string' ? char.char : ['', ' '][char.delta[0]])
                     skippedACharCounter = 0;
                 }
+                lastChar = [char, prevChar];
             }
             if (lastAttributes.doubleHeight) outputString.push('\x0b');
             if (+lineIdx === 0 && this.settings.statusBar) outputString.push('\x1f\x41\x41');

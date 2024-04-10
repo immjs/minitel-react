@@ -9,6 +9,7 @@ export declare class RichChar<T> {
     static getAttributesApplier(attributes: Partial<CharAttributes>, previousAttributes: CharAttributes): string;
     attributesDiff(attributes: CharAttributes): CharAttributes;
     constructor(char: T, attributes?: Partial<CharAttributes>, ...[delta, actualChar,]: T extends null ? [[number, number], RichChar<string>] : [undefined?, undefined?]);
+    areAttributesEqual(attributes: CharAttributes): boolean;
     isEqual(that: RichChar<string> | RichChar<null>): boolean;
     copy(): RichChar<T>;
     noSize(): RichChar<T>;

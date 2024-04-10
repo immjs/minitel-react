@@ -7,11 +7,11 @@ const wss = new WebSocketServer({ port: 8080 });
 
 function App() {
     const [time, setTime] = React.useState(Date.now());
-    const [randomValue, setRandomValue] = React.useState(false);
+    const [randomValue, setRandomValue] = React.useState(0);
     React.useEffect(() => {
         setInterval(() => {
             setTime(Date.now());
-            setRandomValue((randomValue) => !randomValue);
+            setRandomValue((r) => ({'0': 3,'3': 1}[r])!);
         }, 2_000);
     }, []);
     return (
@@ -30,9 +30,10 @@ function App() {
                         {App.toString()}
                     </para>
                 </xjoin>
-                <xjoin widthAlign="middle">
-                    <para doubleHeight doubleWidth>{ String(randomValue) }</para>
-                </xjoin>
+                <yjoin widthAlign="middle">
+                    <para doubleHeight doubleWidth fg={0} bg={7}> {'I'.repeat(randomValue)} </para>
+                    <input autofocus />
+                </yjoin>
             </yjoin>
         </yjoin>
     );
