@@ -25,46 +25,54 @@ export class Scrollable extends Container<ScrollableAttributes, { key: [string] 
     blink() {
         if (this.artificialBlink) clearTimeout(this.artificialBlink);
 
-        this.artificialBlink = setTimeout((v) => {
-            if (this.focused || !this.blinkShown) {
-                if (this.focused) {
-                    this.blinkShown = !this.blinkShown;
-                } else {
-                    this.blinkShown = true;
-                }
-    
-                this.minitel.queueImmediateRenderToStream();
+        this.artificialBlink = setTimeout(
+            this.blinkHandler.bind(this),
+            this.attributes.blinkPeriod || Scrollable.defaultAttributes.blinkPeriod,
+        );
+    }
+    blinkHandler() {
+        if (this.focused || !this.blinkShown) {
+            if (this.focused) {
+                this.blinkShown = !this.blinkShown;
+            } else {
+                this.blinkShown = true;
             }
 
-            this.blink();
-        }, this.attributes.blinkPeriod || Scrollable.defaultAttributes.blinkPeriod);
+            this.minitel.queueImmediateRenderToStream();
+        }
+
+        this.blink();
     }
     constructor(children = [], attributes: Partial<ScrollableAttributes>, minitel: Minitel) {
         super(children, attributes, minitel);
 
         this.blink();
 
-        this.on('key', (str) => {
-            // console.log(str);
-            switch (str) {
-                case '\x1b\x5b\x41': // up
-                    this.scrollDeltaY -= 1;
-                    this.minitel.queueImmediateRenderToStream();
-                    break;
-                case '\x1b\x5b\x42': // down
-                    this.scrollDeltaY += 1;
-                    this.minitel.queueImmediateRenderToStream();
-                    break;
-                case '\x1b\x5b\x43': // right
-                    this.scrollDeltaX += 1;
-                    this.minitel.queueImmediateRenderToStream();
-                    break;
-                case '\x1b\x5b\x44': // left
-                    this.scrollDeltaX -= 1;
-                    this.minitel.queueImmediateRenderToStream();
-                    break;
-            }
-        });
+        this.on('key', this.keyEventListener);
+    }
+    keyEventListener(str: string) {
+        switch (str) {
+            case '\x1b\x5b\x41': // up
+                this.scrollDeltaY -= 1;
+                this.minitel.queueImmediateRenderToStream();
+                break;
+            case '\x1b\x5b\x42': // down
+                this.scrollDeltaY += 1;
+                this.minitel.queueImmediateRenderToStream();
+                break;
+            case '\x1b\x5b\x43': // right
+                this.scrollDeltaX += 1;
+                this.minitel.queueImmediateRenderToStream();
+                break;
+            case '\x1b\x5b\x44': // left
+                this.scrollDeltaX -= 1;
+                this.minitel.queueImmediateRenderToStream();
+                break;
+        }
+    }
+    unmount() {
+        this.off('key', this.keyEventListener);
+        if (this.artificialBlink) clearTimeout(this.artificialBlink);
     }
     render(attributes: ScrollableAttributes, inheritMe: Partial<ScrollableAttributes>) {
         // now its 3 am and i don't know how i'll read back

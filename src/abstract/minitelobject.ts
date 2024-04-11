@@ -83,4 +83,10 @@ export class MinitelObject<T extends MinitelObjectAttributes = MinitelObjectAttr
             return focusables;
         });
     }
+
+    unmount() {}
+    unmountWrapper() {
+        this.children.forEach((v) => v.unmountWrapper());
+        this.unmount();
+    }
 }

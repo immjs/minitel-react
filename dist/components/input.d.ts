@@ -12,6 +12,8 @@ export declare class Input extends MinitelObject<InputAttributes, {
     disabled: boolean;
     keepElmDesc: true;
     constructor(children: [], attributes: Partial<InputAttributes>, minitel: Minitel);
+    keyEventListener(key: string): void;
+    unmount(): void;
     render(attributes: InputAttributes, inheritMe: Partial<InputAttributes>): RichCharGrid;
     get focusCursorAt(): [number, number];
 }

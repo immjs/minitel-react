@@ -53,6 +53,11 @@ export class MinitelObject extends EventEmitter {
             return focusables;
         });
     }
+    unmount() { }
+    unmountWrapper() {
+        this.children.forEach((v) => v.unmountWrapper());
+        this.unmount();
+    }
 }
 MinitelObject.defaultAttributes = {
     width: null,

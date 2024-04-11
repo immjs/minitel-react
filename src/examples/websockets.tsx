@@ -1,7 +1,8 @@
 import { render, Minitel } from '../index.js';
-import { WebSocketServer, createWebSocketStream } from 'ws';
+import { WebSocket, WebSocketServer, createWebSocketStream } from 'ws';
 
 import React from 'react';
+import { Duplex, DuplexOptions } from 'stream';
 
 const wss = new WebSocketServer({ port: 8080 });
 
@@ -53,20 +54,42 @@ function App() {
     );
 };
 
-wss.on('connection', function connection(ws) {
-    try {
-        const minitel = new Minitel(createWebSocketStream(ws, { decodeStrings: false }), { statusBar: true });
-
-        ws.on('message', (data) => console.log({ data }));
-
-        render(<App />, minitel);
-    } catch (err) {
-        console.log((err as Error).message);
-        if ((err as Error).message.includes('readyState')) {
-            return; // it does that sometimes
-        }
-        throw err;
+class DuplexBridge extends Duplex { // not nice making me do this, couldve been prevented with a simple event
+  destinationStream: Duplex;
+  ws: WebSocket;
+  constructor(destinationStream: Duplex, ws: WebSocket, opts?: DuplexOptions) {
+    super(opts);
+    this.ws = ws;
+    this.destinationStream = destinationStream;
+    this.destinationStream.on('readable', () => this.push(this.destinationStream.read()))
+  }
+  _write(chunk: any, bufferEncoding: BufferEncoding, callback: (err: Error | null | undefined) => void): void {
+    if (this.ws.readyState === this.ws.CONNECTING || this.ws.readyState === this.ws.OPEN) {
+      this.destinationStream.write(chunk, bufferEncoding, callback);
+    } else {
+      console.log('Prevented disaster!');
+      return;
     }
+  }
+  _read(size?: number) {
+    return this.destinationStream.read(size);
+  }
+}
+
+wss.on('connection', function connection(ws) {
+    const bridge = new DuplexBridge(createWebSocketStream(ws), ws)
+
+    const minitel = new Minitel(bridge, { statusBar: true });
+
+    ws.on('message', (data) => console.log({ data }));
+
+    const derender = render(<App />, minitel);
+
+    ws.on('close', () => {
+      minitel.stream = new Duplex();
+      derender();
+      console.log('AYO');
+    });
 });
 
 wss.on('error', () => {});

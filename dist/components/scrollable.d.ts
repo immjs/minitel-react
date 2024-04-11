@@ -16,7 +16,10 @@ export declare class Scrollable extends Container<ScrollableAttributes, {
     artificialBlink: NodeJS.Timeout | null;
     blinkShown: boolean;
     blink(): void;
+    blinkHandler(): void;
     constructor(children: never[] | undefined, attributes: Partial<ScrollableAttributes>, minitel: Minitel);
+    keyEventListener(str: string): void;
+    unmount(): void;
     render(attributes: ScrollableAttributes, inheritMe: Partial<ScrollableAttributes>): RichCharGrid;
 }
 export interface ScrollableAttributes extends ContainerAttributes {

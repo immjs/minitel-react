@@ -19,4 +19,6 @@ export declare class MinitelObject<T extends MinitelObjectAttributes = MinitelOb
     render(attributes: T, inheritMe: Partial<T>): RichCharGrid;
     renderWrapper(inheritedAttributes: Partial<T>, forcedAttributes?: Partial<T>): RichCharGrid;
     focusables(): Focusable[];
+    unmount(): void;
+    unmountWrapper(): void;
 }

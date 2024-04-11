@@ -117,6 +117,7 @@ export const render = (reactElement, rootEl, callback) => {
     // update the root Container
     MiniRenderer.updateContainer(reactElement, rootEl._rootContainer, null, callback);
     return (() => {
+        rootEl.unmountWrapper();
         MiniRenderer.updateContainer(null, rootEl._rootContainer, null, callback);
     });
 };

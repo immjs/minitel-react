@@ -21,19 +21,23 @@ export class Input extends MinitelObject<InputAttributes, { key: [string] }> imp
     disabled = false;
     keepElmDesc = true as const;
     constructor(children: [], attributes: Partial<InputAttributes>, minitel: Minitel) {
-        super([], attributes, minitel);
+        super(children, attributes, minitel);
 
-        this.on('key', (key) => {
-            if (/^[a-zA-Z0-9 ]$/gi.test(key)) {
-                this.value += key;
-                if (attributes.onChange) attributes.onChange(this);
-                minitel.renderToStream();
-            } else if (key === '\x13\x47') {
-                this.value = this.value.slice(0, -1);
-                if (attributes.onChange) attributes.onChange(this);
-                minitel.renderToStream();
-            }
-        });
+        this.on('key', this.keyEventListener);
+    }
+    keyEventListener(key: string) {
+        if (/^[a-zA-Z0-9 ]$/gi.test(key)) {
+            this.value += key;
+            if (this.attributes.onChange) this.attributes.onChange(this);
+            this.minitel.renderToStream();
+        } else if (key === '\x13\x47') {
+            this.value = this.value.slice(0, -1);
+            if (this.attributes.onChange) this.attributes.onChange(this);
+            this.minitel.renderToStream();
+        }
+    }
+    unmount() {
+        this.off('key', this.keyEventListener);
     }
     render(attributes: InputAttributes, inheritMe: Partial<InputAttributes>) {
         const fillChar = new RichChar(attributes.fillChar, attributes).noSize();
