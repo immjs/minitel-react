@@ -27,7 +27,7 @@ export interface RenderLinesAttributes extends MinitelObjectAttributes {
     forcedIndent?: number;
 }
 
-type MiniProps<T> = Partial<T & { children: React.ReactNode | React.ReactNode[] }>;
+type MiniProps<T> = Partial<T & { children: React.ReactNode | React.ReactNode[]; key: React.Key }>;
 
 declare module 'react/jsx-runtime' {
     namespace JSX {

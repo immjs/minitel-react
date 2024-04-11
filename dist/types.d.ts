@@ -28,6 +28,7 @@ export interface RenderLinesAttributes extends MinitelObjectAttributes {
 }
 type MiniProps<T> = Partial<T & {
     children: React.ReactNode | React.ReactNode[];
+    key: React.Key;
 }>;
 declare module 'react/jsx-runtime' {
     namespace JSX {
