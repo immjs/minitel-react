@@ -38,7 +38,7 @@ export class LocationDescriptors {
     }
 
     cut(h: number, w: number) {
-        this.locs.forEach((v) => v.cut(h - v.y,  - v.x));
+        this.locs.forEach((v) => v.cut(h - v.y, w - v.x));
         this.lookupAt.forEach((v) => v.cut(h, w));
     }
 

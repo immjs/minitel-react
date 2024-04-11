@@ -122,13 +122,13 @@ export class Minitel extends Container {
             if (locationDescriptor && 'focusCursorAt' in this.focusedObj && this.focusedObj.focusCursorAt != null) {
                 const { x, y, w, h } = locationDescriptor;
                 const [cursorDeltaY, cursorDeltaX] = this.focusedObj.focusCursorAt;
-                outputString.push(this.toCursorMove(Math.min(y + cursorDeltaY, y + h - 1), Math.min(x + cursorDeltaX, x + w - 1)));
+                outputString.push(this.toCursorMove(Math.min(y + cursorDeltaY, y + h - 1), Math.min(x + cursorDeltaX, x + w)));
                 outputString.push('\x11');
             }
         }
         // if i get bullied in prépa, it will be because of this
         let preOptimized = outputString.join('\x80');
-        preOptimized = preOptimized.replace(/(.)(€\1){2,62}/g, (v) => `${v[0]}\x12${String.fromCharCode((v.length + 1) / 2 + 63)}`);
+        preOptimized = preOptimized.replace(/(.)(\x80\1){2,62}/g, (v) => `${v[0]}\x12${String.fromCharCode((v.length + 1) / 2 + 63)}`);
         // console.log(JSON.stringify(preOptimized));
         return preOptimized.split('\x80').join('');
     }

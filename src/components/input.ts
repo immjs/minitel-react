@@ -45,7 +45,7 @@ export class Input extends MinitelObject<InputAttributes, { key: [string] }> imp
         }[attributes.type].slice(-attributes.width!), inheritMe).setWidth(attributes.width!, 'end', fillChar);
     }
     get focusCursorAt() {
-        return [0, Math.max(this.value.length)] as [number, number];
+        return [0, this.value.length] as [number, number];
     }
 }
 

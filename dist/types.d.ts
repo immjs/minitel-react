@@ -3,6 +3,7 @@ import { InputAttributes } from './components/input.js';
 import { ScrollableAttributes } from './components/scrollable.js';
 import { XJoinAttributes } from './components/xjoin.js';
 import { YJoinAttributes } from './components/yjoin.js';
+import { ZJoinAttributes } from './components/zjoin.js';
 export interface CharAttributes {
     fg: number;
     bg: number;
@@ -33,6 +34,7 @@ declare module 'react/jsx-runtime' {
         interface IntrinsicElements {
             xjoin: MiniProps<XJoinAttributes>;
             yjoin: MiniProps<YJoinAttributes>;
+            zjoin: MiniProps<ZJoinAttributes>;
             para: MiniProps<MinitelObjectAttributes>;
             cont: MiniProps<MinitelObjectAttributes>;
             input: MiniProps<InputAttributes>;

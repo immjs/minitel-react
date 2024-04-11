@@ -17,10 +17,12 @@ import { TextNode } from './abstract/textnode.js';
 import { DefaultEventPriority, } from 'react-reconciler/constants.js';
 import { Input } from './components/input.js';
 import { Scrollable } from './components/scrollable.js';
+import { ZJoin } from './components/zjoin.js';
 const elements = {
     para: Paragraph,
     yjoin: YJoin,
     xjoin: XJoin,
+    zjoin: ZJoin,
     input: Input,
     scroll: Scrollable,
 };
@@ -55,6 +57,9 @@ const MiniRenderer = Reconciler({
     },
     removeChild(parentInstance, child) {
         parentInstance.removeChild(child);
+    },
+    removeChildFromContainer(container, child) {
+        container.removeChild(child);
     },
     commitTextUpdate(textInstance, prevText, nextText) {
         textInstance.text = nextText;
@@ -110,6 +115,9 @@ export const render = (reactElement, rootEl, callback) => {
         rootEl._rootContainer = MiniRenderer.createContainer(rootEl, 0, null, true, null, '', () => { }, null);
     }
     // update the root Container
-    return MiniRenderer.updateContainer(reactElement, rootEl._rootContainer, null, callback);
+    MiniRenderer.updateContainer(reactElement, rootEl._rootContainer, null, callback);
+    return (() => {
+        MiniRenderer.updateContainer(null, rootEl._rootContainer, null, callback);
+    });
 };
 export { Minitel } from './components/minitel.js';

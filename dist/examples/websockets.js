@@ -9,10 +9,13 @@ function App() {
     React.useEffect(() => {
         setInterval(() => {
             setTime(Date.now());
-            setRandomValue((r) => ({ '0': 3, '3': 1 }[r]));
+            setRandomValue((r) => {
+                console.log(r);
+                return ({ '0': 3, '3': 0 }[r]);
+            });
         }, 2000);
     }, []);
-    return (_jsxs("yjoin", { children: [_jsx("xjoin", { invert: true, widthAlign: "middle", children: Intl.DateTimeFormat('en-US', { timeStyle: 'medium' }).format(time) }), _jsxs("yjoin", { flexGrow: true, heightAlign: "middle", gap: "space-evenly", children: [_jsxs("xjoin", { widthAlign: "middle", children: [_jsx("para", { bg: 7, fg: 0, doubleHeight: true, children: " " }), _jsx("para", { doubleHeight: true, doubleWidth: true, bg: 7, fg: 0, children: "Up @ 9600 bauds" }), _jsx("para", { bg: 7, fg: 0, doubleHeight: true, children: " " })] }), _jsx("xjoin", { children: _jsx("para", { children: App.toString() }) }), _jsx("scroll", { height: 5, children: _jsxs("yjoin", { widthAlign: "middle", gap: 10, children: [_jsxs("para", { doubleHeight: true, doubleWidth: true, fg: 0, bg: 7, children: [" ", 'I'.repeat(randomValue), " "] }), _jsx("input", {})] }) })] })] }));
+    return (_jsxs("yjoin", { children: [_jsx("xjoin", { invert: true, widthAlign: "middle", children: Intl.DateTimeFormat('en-US', { timeStyle: 'medium' }).format(time) }), _jsxs("zjoin", { flexGrow: true, children: [_jsxs("yjoin", { heightAlign: "middle", gap: "space-evenly", children: [_jsxs("xjoin", { widthAlign: "middle", children: [_jsx("para", { bg: 7, fg: 0, doubleHeight: true, children: " " }), _jsx("para", { doubleHeight: true, doubleWidth: true, bg: 7, fg: 0, children: "Up @ 9600 bauds" }), _jsx("para", { bg: 7, fg: 0, doubleHeight: true, children: " " })] }), _jsx("xjoin", { children: _jsx("para", { children: App.toString() }) }), _jsx("scroll", { height: 4, children: _jsxs("yjoin", { widthAlign: "middle", gap: 10, children: [_jsxs("para", { doubleHeight: true, doubleWidth: true, fg: 0, bg: 7, children: [" ", 'I'.repeat(randomValue), " "] }), _jsx("input", {})] }) })] }), _jsx("yjoin", { widthAlign: "middle", heightAlign: "middle", fillChar: '\x09', children: _jsx("yjoin", { pad: [0, 1], fillChar: ' ', children: _jsx("yjoin", { pad: [3, 6], bg: 5, fg: 3, children: "Hello world!" }) }) })] })] }));
 }
 ;
 wss.on('connection', function connection(ws) {

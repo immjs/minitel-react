@@ -33,7 +33,7 @@ export class Input extends MinitelObject {
         }[attributes.type].slice(-attributes.width), inheritMe).setWidth(attributes.width, 'end', fillChar);
     }
     get focusCursorAt() {
-        return [0, Math.max(this.value.length)];
+        return [0, this.value.length];
     }
 }
 Input.defaultAttributes = Object.assign(Object.assign({}, MinitelObject.defaultAttributes), { fillChar: '.', width: 8, height: 1, type: 'text', autofocus: false, onChange: () => { } });

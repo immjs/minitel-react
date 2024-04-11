@@ -27,7 +27,7 @@ export class LocationDescriptors {
         this.lookupAt.forEach((v) => v.applyDelta(dy, dx));
     }
     cut(h, w) {
-        this.locs.forEach((v) => v.cut(h - v.y, -v.x));
+        this.locs.forEach((v) => v.cut(h - v.y, w - v.x));
         this.lookupAt.forEach((v) => v.cut(h, w));
     }
     has(key) {
