@@ -30,10 +30,12 @@ function App() {
                         {App.toString()}
                     </para>
                 </xjoin>
-                <yjoin widthAlign="middle">
-                    <para doubleHeight doubleWidth fg={0} bg={7}> {'I'.repeat(randomValue)} </para>
-                    <input autofocus />
-                </yjoin>
+                <scroll height={5}>
+                    <yjoin widthAlign="middle" gap={10}>
+                        <para doubleHeight doubleWidth fg={0} bg={7}> {'I'.repeat(randomValue)} </para>
+                        <input />
+                    </yjoin>
+                </scroll>
             </yjoin>
         </yjoin>
     );

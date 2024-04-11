@@ -16,11 +16,13 @@ import { XJoin } from './components/xjoin.js';
 import { TextNode } from './abstract/textnode.js';
 import { DefaultEventPriority, } from 'react-reconciler/constants.js';
 import { Input } from './components/input.js';
+import { Scrollable } from './components/scrollable.js';
 const elements = {
     para: Paragraph,
     yjoin: YJoin,
     xjoin: XJoin,
     input: Input,
+    scroll: Scrollable,
 };
 let lastImmediate = null;
 const MiniRenderer = Reconciler({

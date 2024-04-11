@@ -13,12 +13,14 @@ import {
     DefaultEventPriority,
 } from 'react-reconciler/constants.js';
 import { Input } from './components/input.js';
+import { Scrollable } from './components/scrollable.js';
 
 const elements = {
     para: Paragraph,
     yjoin: YJoin,
     xjoin: XJoin,
     input: Input,
+    scroll: Scrollable,
 };
 
 let lastImmediate: NodeJS.Immediate | null = null;

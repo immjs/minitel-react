@@ -13,6 +13,8 @@ import { expectNextChars } from '../inputConstants.js';
 export interface MinitelSettings {
     statusBar: boolean;
     localEcho: boolean;
+    extendedMode: boolean;
+    defaultCase: 'upper' | 'lower';
 }
 
 export class Minitel extends Container<ContainerAttributes, { key: [string] }> {
@@ -39,6 +41,8 @@ export class Minitel extends Container<ContainerAttributes, { key: [string] }> {
         this.settings = {
             statusBar: false,
             localEcho: false,
+            extendedMode: true,
+            defaultCase: 'upper',
             ...settings,
         };
         this.stream = stream;
@@ -50,6 +54,21 @@ export class Minitel extends Container<ContainerAttributes, { key: [string] }> {
             this.settings.localEcho ? '\x61' : '\x60',
             '\x58',
             '\x52',
+        ].join(''));
+
+        // Take care of extendedMode
+        this.stream.write([
+            '\x1b\x3b',
+            this.settings.extendedMode ? '\x69' : '\x6A',
+            '\x59',
+            '\x41',
+        ].join(''));
+
+        // Set capitalization
+        this.stream.write([
+            '\x1b\x3a',
+            this.settings.defaultCase === 'upper' ? '\x69' : '\x6A',
+            '\x45',
         ].join(''));
 
         this.stream.write('\x1f\x40\x41\x18\x0c'); // Clear status; clear screen
@@ -64,13 +83,13 @@ export class Minitel extends Container<ContainerAttributes, { key: [string] }> {
                 howManyToExpect = Math.max(0, howManyToExpect + (expectNextChars[acc] || 0));
                 if (howManyToExpect === 0) {
                     this.emit('key', acc);
-                    if (acc.match(/^([a-z0-9 ]|\x13\x47)$/gi)) {
+                    if (acc.match(/^([a-z0-9 ]|\x13\x47|\x1b\x5b[\x41\x42\x43\x44])$/gi)) {
                         const focusedObj = this.focusedObj;
                         if (focusedObj) {
                             focusedObj.emit('key', acc);
                         }
                     } else if (acc === '\x13\x48' || acc === '\x13\x42') {
-                        const deltaTable: Record<'\x13\x48' | '\x13\x42', number> = {
+                        const deltaTable: Record<'\x13\x48' | '\x13\x42', 1 | -1> = {
                             '\x13\x48': 1,
                             '\x13\x42': -1,
                         };
@@ -97,10 +116,12 @@ export class Minitel extends Container<ContainerAttributes, { key: [string] }> {
 
         this.handleFocus();
 
-        const outputString = [];
+        const outputString = ['\x14'];
+
         let lastAttributes: Readonly<CharAttributes> = Minitel.defaultScreenAttributes;
         let skippedACharCounter = 0;
         let lastChar: [RichChar<string> | RichChar<null>, RichChar<string> | RichChar<null>] | null = null;
+
         for (let lineIdx in renderGrid.grid) {
             if (+lineIdx === 0 && this.settings.statusBar) outputString.push('\x1f\x40\x41');
             const line = renderGrid.grid[lineIdx];
@@ -150,14 +171,16 @@ export class Minitel extends Container<ContainerAttributes, { key: [string] }> {
                 lastChar = [char, prevChar];
             }
             if (lastAttributes.doubleHeight) outputString.push('\x0b');
-            if (+lineIdx === 0 && this.settings.statusBar) outputString.push('\x1f\x41\x41');
-            lastAttributes = Minitel.defaultScreenAttributes;
+            if (+lineIdx === 0 && this.settings.statusBar) {
+                outputString.push('\x1f\x41\x41');
+                lastAttributes = Minitel.defaultScreenAttributes;
+            }
         }
         this.previousRender = renderGrid.copy();
 
-        if (this.focusedObj && 'focusCursorAt' in this.focusedObj && this.focusedObj.focusCursorAt != null) {
+        if (this.focusedObj) {
             const locationDescriptor = renderGrid.locationDescriptors.get(this.focusedObj);
-            if (locationDescriptor) {
+            if (locationDescriptor && 'focusCursorAt' in this.focusedObj && this.focusedObj.focusCursorAt != null) {
                 const { x, y, w, h } = locationDescriptor;
                 const [cursorDeltaY, cursorDeltaX] = this.focusedObj.focusCursorAt;
     
@@ -166,8 +189,6 @@ export class Minitel extends Container<ContainerAttributes, { key: [string] }> {
                     Math.min(x + cursorDeltaX, x + w - 1),
                 ));
                 outputString.push('\x11');
-            } else {
-                this.focusedObj = null;
             }
         }
         // if i get bullied in prépa, it will be because of this
@@ -196,15 +217,19 @@ export class Minitel extends Container<ContainerAttributes, { key: [string] }> {
         }
         if (this.focusedObj) this.focusedObj.focused = true;
     }
-    focusDelta(delta: number) {
+    focusDelta(delta: 1 | -1) {
         const focusables = this.focusables();
-        if (this.focusedObj == null) return null;
+
+        if (this.focusedObj == null) return void (this.focusedObj = focusables[{ '-1': focusables.length - 1, '1': 0 }[delta]]);
+
         let curr = focusables.indexOf(this.focusedObj);
-        if (curr === -1) return void (this.focusedObj = null);
+        if (curr === -1) return void (this.focusedObj = focusables[{ '-1': focusables.length - 1, '1': 0 }[delta]]);
+
         curr += delta;
         curr %= focusables.length;
         curr += focusables.length;
         curr %= focusables.length;
+
         if (this.focusedObj) this.focusedObj.focused = false;
         this.focusedObj = focusables[curr];
         this.focusedObj.focused = true;

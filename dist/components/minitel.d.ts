@@ -9,6 +9,8 @@ import { Focusable } from '../abstract/focusable.js';
 export interface MinitelSettings {
     statusBar: boolean;
     localEcho: boolean;
+    extendedMode: boolean;
+    defaultCase: 'upper' | 'lower';
 }
 export declare class Minitel extends Container<ContainerAttributes, {
     key: [string];
@@ -24,7 +26,7 @@ export declare class Minitel extends Container<ContainerAttributes, {
     renderString(): string;
     toCursorMove(y: number, x: number): string;
     handleFocus(): void;
-    focusDelta(delta: number): Focusable | null | undefined;
+    focusDelta(delta: 1 | -1): Focusable | undefined;
     queueImmediateRenderToStream(): void;
     renderToStream(): void;
     useKeyboard(callback: (key: string) => void): void;

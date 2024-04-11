@@ -1,4 +1,5 @@
 import { InputAttributes } from './components/input.js';
+import { ScrollableAttributes } from './components/scrollable.js';
 import { XJoinAttributes } from './components/xjoin.js';
 import { YJoinAttributes } from './components/yjoin.js';
 
@@ -35,6 +36,7 @@ declare module 'react/jsx-runtime' {
             para: MiniProps<MinitelObjectAttributes>;
             cont: MiniProps<MinitelObjectAttributes>;
             input: MiniProps<InputAttributes>;
+            scroll: MiniProps<ScrollableAttributes>;
         }
     }
 }
