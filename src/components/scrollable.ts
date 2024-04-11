@@ -78,7 +78,7 @@ export class Scrollable extends Container<ScrollableAttributes, { key: [string] 
         // now its 3 am and i don't know how i'll read back
         // this code it's such a mess
 
-        const fillChar = new RichChar(attributes.fillChar, this.attributes);
+        const fillChar = new RichChar(attributes.fillChar, attributes);
 
         let render: RichCharGrid;
 
@@ -157,12 +157,12 @@ export class Scrollable extends Container<ScrollableAttributes, { key: [string] 
         this.scrollDeltaY = Math.min(Math.max(0, this.scrollDeltaY), (originalHeight - maxScrollSizeY!) || 0);
 
         if (attributes.height != null) {
-            finalRender.cutHeight(Math.min(attributes.height + this.scrollDeltaY, originalHeight), 'end');
-            finalRender.cutHeight(maxScrollSizeY!, 'start');
+            finalRender.setHeight(Math.min(attributes.height + this.scrollDeltaY, originalHeight), 'start', fillChar);
+            finalRender.setHeight(maxScrollSizeY!, 'end', fillChar);
         }
         if (attributes.width != null) {
-            finalRender.cutWidth(Math.min(attributes.width + this.scrollDeltaY, originalWidth), 'end');
-            finalRender.cutWidth(maxScrollSizeX!, 'start');
+            finalRender.setWidth(Math.min(attributes.width + this.scrollDeltaX, originalWidth), 'start', fillChar);
+            finalRender.setWidth(maxScrollSizeX!, 'end', fillChar);
         }
 
         const scrollChar = new RichChar('\x7f', {
