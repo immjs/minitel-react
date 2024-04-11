@@ -171,10 +171,8 @@ export class Minitel extends Container<ContainerAttributes, { key: [string] }> {
                 lastChar = [char, prevChar];
             }
             if (lastAttributes.doubleHeight) outputString.push('\x0b');
-            if (+lineIdx === 0 && this.settings.statusBar) {
-                outputString.push('\x1f\x41\x41');
-                lastAttributes = Minitel.defaultScreenAttributes;
-            }
+            if (+lineIdx === 0 && this.settings.statusBar) outputString.push('\x1f\x41\x41');
+            lastAttributes = { ...lastAttributes, ...RichChar.getDelimited(Minitel.defaultScreenAttributes) };
         }
         this.previousRender = renderGrid.copy();
 

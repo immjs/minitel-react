@@ -112,10 +112,9 @@ export class Minitel extends Container {
             }
             if (lastAttributes.doubleHeight)
                 outputString.push('\x0b');
-            if (+lineIdx === 0 && this.settings.statusBar) {
+            if (+lineIdx === 0 && this.settings.statusBar)
                 outputString.push('\x1f\x41\x41');
-                lastAttributes = Minitel.defaultScreenAttributes;
-            }
+            lastAttributes = Object.assign(Object.assign({}, lastAttributes), RichChar.getDelimited(Minitel.defaultScreenAttributes));
         }
         this.previousRender = renderGrid.copy();
         if (this.focusedObj) {
