@@ -141,11 +141,16 @@ export class Minitel extends Container {
     }
     handleFocus() {
         const focusables = this.focusables();
-        if (this.focusedObj == null) {
-            const oneWithAutofocusIdx = focusables.findLastIndex((v) => v.attributes.autofocus);
-            if (oneWithAutofocusIdx !== -1)
-                this.focusedObj = focusables[oneWithAutofocusIdx];
+        if (this.focusedObj) {
+            const isInTree = this.has(this.focusedObj);
+            this.focusedObj.focused = isInTree;
+            if (isInTree)
+                return;
+            this.focusedObj = null;
         }
+        const oneWithAutofocusIdx = focusables.findLastIndex((v) => v.attributes.autofocus);
+        if (oneWithAutofocusIdx !== -1)
+            this.focusedObj = focusables[oneWithAutofocusIdx];
         if (this.focusedObj)
             this.focusedObj.focused = true;
     }

@@ -89,4 +89,8 @@ export class MinitelObject<T extends MinitelObjectAttributes = MinitelObjectAttr
         this.children.forEach((v) => v.unmountWrapper());
         this.unmount();
     }
+
+    has(child: MinitelObject): boolean {
+        return this.children.includes(child) || this.children.some((v) => v.has(child));
+    }
 }

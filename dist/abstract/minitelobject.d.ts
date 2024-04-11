@@ -21,4 +21,5 @@ export declare class MinitelObject<T extends MinitelObjectAttributes = MinitelOb
     focusables(): Focusable[];
     unmount(): void;
     unmountWrapper(): void;
+    has(child: MinitelObject): boolean;
 }

@@ -58,6 +58,9 @@ export class MinitelObject extends EventEmitter {
         this.children.forEach((v) => v.unmountWrapper());
         this.unmount();
     }
+    has(child) {
+        return this.children.includes(child) || this.children.some((v) => v.has(child));
+    }
 }
 MinitelObject.defaultAttributes = {
     width: null,
