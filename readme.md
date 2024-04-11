@@ -2,7 +2,9 @@
 
 A (somewhat experimental! also somewhat opiniated) package to render react into a minitel!
 
-<small>*it's silly and dumb haha dont actually use it until v4.2.0 i pledge it will be better then*<small>
+<small>*Experimental until v4.2.0, thanks for understanding!*<small>
+
+![](assets/Hello%20NPM.png)
 
 ## Principle
 
@@ -28,6 +30,8 @@ function App() {
 
 render(<App/>, new Minitel(serialport));
 ```
+
+Also: an example with websockets, miedit minitel (You may need to clone [miedit](https://github.com/Zigazou/miedit) into `miedit/` first), inside the dist/examples folder
 
 ## Reference
 
@@ -104,3 +108,43 @@ Will be an input
 
 ### &lt;para&gt;
 Will show text
+
+### &lt;scroll&gt;
+Will allow scrolling (the element needs to be focused to be scrolled upon)
+
+#### Attributes
+
+| Attribute            | Type                                | Description                                                                                       |
+|----------------------|-------------------------------------|---------------------------------------------------------------------------------------------------|
+| overflowX            | `'scroll' \| 'pad' \| 'auto' \| 'hidden'` | Horizontal overflow behavior: 'scroll' for scrollbar, 'pad' for padding, 'auto' for automatic, 'hidden' for hidden overflow. |
+| overflowY            | `'scroll' \| 'pad' \| 'auto' \| 'hidden'` | Vertical overflow behavior: 'scroll' for scrollbar, 'pad' for padding, 'auto' for automatic, 'hidden' for hidden overflow.   |
+| autofocus            | `false`                             | Whether autofocus is enabled for the scrollable area.                                             |
+| scrollbarColor       | `number`                            | The color code for the scrollbar.                                                                  |
+| scrollbarBackColor   | `number`                            | The color code for the scrollbar background.                                                       |
+| blinkPeriod          | `number`                            | The blinking period for the scrollbar (in milliseconds).                                          |
+
+`auto` will hide the scrollbar when possible
+`scroll` and `pad` only differ in the case that the children already fit in the imposed area: `scroll` will show the scrollbar anyway, while `pad` will leave this space empty
+
+### &lt;cont&gt;
+
+Will hold one child.
+
+#### Attributes
+
+| Attribute     | Type          | Description                                                                                       |
+|---------------|---------------|---------------------------------------------------------------------------------------------------|
+| widthAlign    | `Align`       | The alignment of child elements along the horizontal axis (`start`, `middle`, `end`, or `stretch`). |
+| heightAlign   | `Align`       | The alignment of child elements along the vertical axis (`start`, `middle`, `end`, or `stretch`).   |
+
+### &lt;zjoin&gt;
+
+Will allow stacking of one element onto another. The character `\x09` will order `zjoin` to show the character underneath.
+
+#### Attributes
+
+| Attribute            | Type       | Description                                                                                       |
+|----------------------|------------|---------------------------------------------------------------------------------------------------|
+| widthAlign           | `Align`    | The alignment of child elements along the horizontal axis (`start`, `middle`, `end`, or `stretch`). |
+| heightAlign          | `Align`    | The alignment of child elements along the vertical axis (`start`, `middle`, `end`, or `stretch`).   |
+| inheritTransparency  | `boolean`  | Whether child elements should have fillChar set to `\x09` by default                              |

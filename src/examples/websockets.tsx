@@ -12,15 +12,13 @@ function App() {
     React.useEffect(() => {
         setInterval(() => {
             setTime(Date.now());
-            setRandomValue((r) => {
-                console.log(r);
-                return ({'0': 3,'3': 0}[r])!
-            });
-        }, 2_000);
+        }, 1_000);
     }, []);
     return (
         <yjoin>
-            <xjoin invert widthAlign="middle">{Intl.DateTimeFormat('en-US', { timeStyle: 'medium' }).format(time)}</xjoin>
+            <xjoin bg={7} fg={0} widthAlign="middle">
+                {Intl.DateTimeFormat('en-US', { timeStyle: 'medium' }).format(time)}
+            </xjoin>
             <zjoin flexGrow>
                 <yjoin heightAlign="middle" gap="space-evenly">
                     <xjoin widthAlign="middle">
@@ -35,10 +33,16 @@ function App() {
                             {App.toString()}
                         </para>
                     </xjoin>
-                    <scroll height={4}>
-                        <yjoin widthAlign="middle" gap={10}>
-                            <para doubleHeight doubleWidth fg={0} bg={7}> {'I'.repeat(randomValue)} </para>
-                            <input />
+                    <scroll height={4} overflowY="scroll">
+                        <yjoin widthAlign="middle" gap={0}>
+                            {/* <para doubleHeight doubleWidth fg={0} bg={7}> {'I'.repeat(randomValue)} </para> */}
+                            <input width={16} />
+                            <para>
+                                Hello world{'\n'}
+                                Programmed to work and not to feel{'\n'}
+                                Not even sure that it is real{'\n'}
+                                Hello world
+                            </para>
                         </yjoin>
                     </scroll>
                 </yjoin>
@@ -54,30 +58,29 @@ function App() {
     );
 };
 
-class DuplexBridge extends Duplex { // not nice making me do this, couldve been prevented with a simple event
-  destinationStream: Duplex;
-  ws: WebSocket;
-  constructor(destinationStream: Duplex, ws: WebSocket, opts?: DuplexOptions) {
-    super(opts);
-    this.ws = ws;
-    this.destinationStream = destinationStream;
-    this.destinationStream.on('readable', () => this.push(this.destinationStream.read()))
-  }
-  _write(chunk: any, bufferEncoding: BufferEncoding, callback: (err: Error | null | undefined) => void): void {
-    if (this.ws.readyState === this.ws.CONNECTING || this.ws.readyState === this.ws.OPEN) {
-      this.destinationStream.write(chunk, bufferEncoding, callback);
-    } else {
-      console.log('Prevented disaster!');
-      return;
+class DuplexBridge extends Duplex { // not nice making me do this, couldve been prevented with a simple event before CLOSING ready state
+    destinationStream: Duplex;
+    ws: WebSocket;
+    constructor(destinationStream: Duplex, ws: WebSocket, opts?: DuplexOptions) {
+        super(opts);
+        this.ws = ws;
+        this.destinationStream = destinationStream;
+        this.destinationStream.on('readable', () => this.push(this.destinationStream.read()))
     }
-  }
-  _read(size?: number) {
-    return this.destinationStream.read(size);
-  }
+    _write(chunk: any, bufferEncoding: BufferEncoding, callback: (err: Error | null | undefined) => void): void {
+        if (this.ws.readyState === this.ws.CONNECTING || this.ws.readyState === this.ws.OPEN) {
+            this.destinationStream.write(chunk, bufferEncoding, callback);
+        } else {
+            return;
+        }
+    }
+    _read(size?: number) {
+        return this.destinationStream.read(size);
+    }
 }
 
 wss.on('connection', function connection(ws) {
-    const bridge = new DuplexBridge(createWebSocketStream(ws), ws)
+    const bridge = new DuplexBridge(createWebSocketStream(ws, { decodeStrings: false }), ws, { decodeStrings: false })
 
     const minitel = new Minitel(bridge, { statusBar: true });
 
@@ -86,9 +89,9 @@ wss.on('connection', function connection(ws) {
     const derender = render(<App />, minitel);
 
     ws.on('close', () => {
-      minitel.stream = new Duplex();
-      derender();
-      console.log('AYO');
+        minitel.stream = new Duplex();
+        derender();
+        console.log('AYO');
     });
 });
 

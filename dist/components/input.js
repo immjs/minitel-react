@@ -12,7 +12,7 @@ export class Input extends MinitelObject {
         this.on('key', this.keyEventListener);
     }
     keyEventListener(key) {
-        if (/^[a-zA-Z0-9 ]$/gi.test(key)) {
+        if (/^[a-zA-Z0-9,\.';\-\:?!"#$%&\(\)\[\]<>@+=*/ ]$/g.test(key)) {
             this.value += key;
             if (this.attributes.onChange)
                 this.attributes.onChange(this);

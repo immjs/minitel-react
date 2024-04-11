@@ -28,5 +28,5 @@ export interface ScrollableAttributes extends ContainerAttributes {
     autofocus: false;
     scrollbarColor: number;
     scrollbarBackColor: number;
-    blinkPeriod: 500;
+    blinkPeriod: number;
 }

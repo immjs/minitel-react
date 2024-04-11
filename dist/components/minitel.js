@@ -15,6 +15,8 @@ export class Minitel extends Container {
         this.settings = Object.assign({ statusBar: false, localEcho: false, extendedMode: true, defaultCase: 'upper' }, settings);
         this.stream = stream;
         this.previousRender = RichCharGrid.fill(40, 24 + +this.settings.statusBar, new RichChar(' '));
+        // TBD.
+        // this.rxQueue = new FifoQueue();
         // Take care of localEcho
         this.stream.write([
             '\x1b\x3b',
@@ -46,7 +48,7 @@ export class Minitel extends Container {
                 howManyToExpect = Math.max(0, howManyToExpect + (expectNextChars[acc] || 0));
                 if (howManyToExpect === 0) {
                     this.emit('key', acc);
-                    if (acc.match(/^([a-z0-9 ]|\x13\x47|\x1b\x5b[\x41\x42\x43\x44])$/gi)) {
+                    if (acc.match(/^([a-zA-Z0-9,\.';\-\:?!"#$%&\(\)\[\]<>@+=*/ ]|\x13\x47|\x1b\x5b[\x41\x42\x43\x44])$/g)) {
                         const focusedObj = this.focusedObj;
                         if (focusedObj) {
                             focusedObj.emit('key', acc);
@@ -65,8 +67,6 @@ export class Minitel extends Container {
                 }
             }
         });
-        // TBD.
-        // this.rxQueue = new FifoQueue();
     }
     renderString() {
         const renderGrid = this.renderWrapper({}, {

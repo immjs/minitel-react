@@ -26,7 +26,7 @@ export class Input extends MinitelObject<InputAttributes, { key: [string] }> imp
         this.on('key', this.keyEventListener);
     }
     keyEventListener(key: string) {
-        if (/^[a-zA-Z0-9 ]$/gi.test(key)) {
+        if (/^[a-zA-Z0-9,\.';\-\:?!"#$%&\(\)\[\]<>@+=*/ ]$/g.test(key)) {
             this.value += key;
             if (this.attributes.onChange) this.attributes.onChange(this);
             this.minitel.renderToStream();

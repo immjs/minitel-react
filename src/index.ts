@@ -15,11 +15,13 @@ import {
 import { Input } from './components/input.js';
 import { Scrollable } from './components/scrollable.js';
 import { ZJoin } from './components/zjoin.js';
+import { Container } from './components/container.js';
 
 const elements = {
     para: Paragraph,
     yjoin: YJoin,
     xjoin: XJoin,
+    cont: Container,
     zjoin: ZJoin,
     input: Input,
     scroll: Scrollable,

@@ -143,25 +143,26 @@ export class Scrollable extends Container<ScrollableAttributes, { key: [string] 
             ? attributes.width - 1
             : attributes.width; // Area available for scroll for bottom scroll bar
 
-        const scrollbarSizeX = attributes.width && Math.ceil(maxScrollSizeX! * maxScrollSizeX! / originalWidth);
+        const scrollbarSizeX = attributes.width && Math.max(Math.floor(maxScrollSizeX! * maxScrollSizeX! / originalWidth), 1);
 
-        this.scrollDeltaX = Math.min(Math.max(0, this.scrollDeltaX), (originalWidth - maxScrollSizeX!) || 0);
+        this.scrollDeltaX = Math.max(0, Math.min(this.scrollDeltaX, (originalWidth - maxScrollSizeX!) || 0));
 
 
         const maxScrollSizeY = attributes.overflowX !== 'hidden' && !autoedX && attributes.height != null
             ? attributes.height - 1
             : attributes.height; // Area available for scroll for right scroll bar\
 
-        const scrollbarSizeY = attributes.height && Math.ceil(maxScrollSizeY! * maxScrollSizeY! / originalHeight);
+        const scrollbarSizeY = attributes.height && Math.max(Math.floor(maxScrollSizeY! * maxScrollSizeY! / originalHeight), 1);
 
-        this.scrollDeltaY = Math.min(Math.max(0, this.scrollDeltaY), (originalHeight - maxScrollSizeY!) || 0);
+        this.scrollDeltaY = Math.max(0, Math.min(this.scrollDeltaY, (originalHeight - maxScrollSizeY!) || 0));
 
         if (attributes.height != null) {
-            finalRender.setHeight(Math.min(attributes.height + this.scrollDeltaY, originalHeight), 'start', fillChar);
+            finalRender.setHeight(originalHeight - this.scrollDeltaY, 'start', fillChar);
+            // console.log(originalHeight - this.scrollDeltaY, finalRender.toString());
             finalRender.setHeight(maxScrollSizeY!, 'end', fillChar);
         }
         if (attributes.width != null) {
-            finalRender.setWidth(Math.min(attributes.width + this.scrollDeltaX, originalWidth), 'start', fillChar);
+            finalRender.setWidth(originalWidth - this.scrollDeltaX, 'start', fillChar);
             finalRender.setWidth(maxScrollSizeX!, 'end', fillChar);
         }
 
@@ -175,10 +176,15 @@ export class Scrollable extends Container<ScrollableAttributes, { key: [string] 
             const percentageScrolled = this.scrollDeltaY / (originalHeight - maxScrollSizeY!);
             const scrollbarOffset = Math.floor((maxScrollSizeY! - scrollbarSizeY!) * percentageScrolled);
 
-            const rightScrollbar = RichCharGrid.fill(1, scrollbarSizeY!, scrollChar);
-
-            rightScrollbar.setHeight(scrollbarSizeY! + scrollbarOffset, 'start', scrollBackChar);
-            rightScrollbar.setHeight(finalRender.height, 'end', scrollBackChar);
+            let rightScrollbar: RichCharGrid;
+            if (originalHeight - maxScrollSizeY! === 0 && attributes.overflowY === 'pad') {
+                rightScrollbar = RichCharGrid.fill(1, finalRender.height, fillChar);
+            } else {
+                rightScrollbar = RichCharGrid.fill(1, scrollbarSizeY!, scrollChar);
+    
+                rightScrollbar.setHeight(scrollbarSizeY! + scrollbarOffset, 'start', scrollBackChar);
+                rightScrollbar.setHeight(finalRender.height, 'end', scrollBackChar);
+            }
 
             finalRender.mergeX(rightScrollbar);
         }
@@ -186,10 +192,15 @@ export class Scrollable extends Container<ScrollableAttributes, { key: [string] 
             const percentageScrolled = this.scrollDeltaX / (originalWidth - maxScrollSizeX!);
             const scrollbarOffset = Math.floor((maxScrollSizeX! - scrollbarSizeX!) * percentageScrolled);
 
-            const bottomScrollbar = RichCharGrid.fill(scrollbarSizeX!, 1, scrollChar);
+            let bottomScrollbar: RichCharGrid;
+            if (originalWidth - maxScrollSizeX! === 0 && attributes.overflowX === 'pad') {
+                bottomScrollbar = RichCharGrid.fill(finalRender.width, 1, fillChar);
+            } else {
+                bottomScrollbar = RichCharGrid.fill(scrollbarSizeX!, 1, scrollChar);
 
-            bottomScrollbar.setWidth(scrollbarSizeX! + scrollbarOffset, 'start', scrollBackChar);
-            bottomScrollbar.setWidth(finalRender.height, 'end', scrollBackChar);
+                bottomScrollbar.setWidth(scrollbarSizeX! + scrollbarOffset, 'start', scrollBackChar);
+                bottomScrollbar.setWidth(finalRender.height, 'end', scrollBackChar);
+            }
 
             finalRender.mergeY(bottomScrollbar);
         }
@@ -206,5 +217,5 @@ export interface ScrollableAttributes extends ContainerAttributes {
     autofocus: false;
     scrollbarColor: number;
     scrollbarBackColor: number;
-    blinkPeriod: 500;
+    blinkPeriod: number;
 }
