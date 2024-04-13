@@ -20,11 +20,11 @@ const serialport = new SerialPort({ path: '/dev/ttyUSB0', baudRate: 1200, parity
 
 function App() {
     return (
-        <vjoin widthAlign="middle" heightAlign="middle">
+        <yjoin widthAlign="middle" heightAlign="middle">
             <para invert>
                 Hello world!
             </para>
-        </vjoin>
+        </yjoin>
     );
 }
 
