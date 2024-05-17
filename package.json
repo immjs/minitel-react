@@ -1,6 +1,6 @@
 {
   "name": "minitel-react",
-  "version": "3.5.0",
+  "version": "3.5.2",
   "description": "A react renderer for the french Minitel",
   "main": "dist/index.js",
   "type": "module",
@@ -24,7 +24,7 @@
   },
   "homepage": "https://github.com/immjs/minitel-react#readme",
   "dependencies": {
-    "minitel-standalone": "^1.0.0",
+    "minitel-standalone": "^1.0.2",
     "react-reconciler": "^0.29.0",
     "word-wrap": "^1.2.5"
   },
