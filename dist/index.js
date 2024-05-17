@@ -10,15 +10,8 @@ var __rest = (this && this.__rest) || function (s, e) {
     return t;
 };
 import Reconciler from 'react-reconciler';
-import { Paragraph } from './components/paragraph.js';
-import { YJoin } from './components/yjoin.js';
-import { XJoin } from './components/xjoin.js';
-import { TextNode } from './abstract/textnode.js';
 import { DefaultEventPriority, } from 'react-reconciler/constants.js';
-import { Input } from './components/input.js';
-import { Scrollable } from './components/scrollable.js';
-import { ZJoin } from './components/zjoin.js';
-import { Container } from './components/container.js';
+import { Container, Input, Minitel, Paragraph, Scrollable, TextNode, XJoin, YJoin, ZJoin } from 'minitel-standalone';
 const elements = {
     para: Paragraph,
     yjoin: YJoin,
@@ -123,4 +116,4 @@ export const render = (reactElement, rootEl, callback) => {
         MiniRenderer.updateContainer(null, rootEl._rootContainer, null, callback);
     });
 };
-export { Minitel } from './components/minitel.js';
+export { Minitel };

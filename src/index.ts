@@ -1,21 +1,11 @@
 import Reconciler from 'react-reconciler';
-import { Paragraph } from './components/paragraph.js';
-import { YJoin } from './components/yjoin.js';
-import { XJoin } from './components/xjoin.js';
-import { MinitelObjectAttributes } from './types.js';
-import { Minitel } from './components/minitel.js';
-import { MinitelObject } from './abstract/minitelobject.js';
-import { TextNode } from './abstract/textnode.js';
+import { MinitelObjectAttributes } from 'minitel-standalone/dist/types.js';
 
 import {
-    DiscreteEventPriority,
-    ContinuousEventPriority,
     DefaultEventPriority,
 } from 'react-reconciler/constants.js';
-import { Input } from './components/input.js';
-import { Scrollable } from './components/scrollable.js';
-import { ZJoin } from './components/zjoin.js';
-import { Container } from './components/container.js';
+import { Container, Input, Minitel, Paragraph, Scrollable, TextNode, XJoin, YJoin, ZJoin } from 'minitel-standalone';
+import { MinitelObject } from 'minitel-standalone/dist/abstract/minitelobject.js';
 
 const elements = {
     para: Paragraph,
@@ -144,4 +134,4 @@ export const render = (reactElement: React.ReactNode, rootEl: Minitel, callback?
     });
 };
 
-export { Minitel } from './components/minitel.js';
+export { Minitel };
