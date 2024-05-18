@@ -1,11 +1,11 @@
-import Reconciler from 'react-reconciler';
+import Reconciler, { FiberRoot } from 'react-reconciler';
 import { createContext, useContext, useEffect } from 'react';
 import { MinitelObjectAttributes } from 'minitel-standalone/dist/types.js';
 
 import {
     DefaultEventPriority,
 } from 'react-reconciler/constants.js';
-import { Container, Input, Minitel, Paragraph, Scrollable, TextNode, XJoin, YJoin, ZJoin } from 'minitel-standalone';
+import { Container, Input, InputAttributes, Minitel, Paragraph, Scrollable, ScrollableAttributes, TextNode, XJoin, XJoinAttributes, YJoin, YJoinAttributes, ZJoin, ZJoinAttributes } from 'minitel-standalone';
 import { MinitelObject } from 'minitel-standalone/dist/abstract/minitelobject.js';
 
 const elements = {
@@ -148,3 +148,27 @@ export function useKeyboard(callback: (arg0: string) => any) {
 }
 
 export { Minitel };
+
+// idk im not skilled enough in TS so ill just slide this in here (plz js work)
+
+type MiniProps<T> = Partial<T & { children: React.ReactNode | React.ReactNode[]; key: React.Key }>;
+
+declare module 'react' {
+    namespace JSX {
+        interface IntrinsicElements {
+            xjoin: MiniProps<XJoinAttributes>;
+            yjoin: MiniProps<YJoinAttributes>;
+            zjoin: MiniProps<ZJoinAttributes>;
+            para: MiniProps<MinitelObjectAttributes>;
+            cont: MiniProps<MinitelObjectAttributes>;
+            input: MiniProps<InputAttributes>;
+            scroll: MiniProps<ScrollableAttributes>;
+        }
+    }
+}
+
+declare module 'minitel-standalone' {
+    interface Minitel {
+        _rootContainer: FiberRoot;
+    }
+}
