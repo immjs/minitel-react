@@ -10,6 +10,7 @@ var __rest = (this && this.__rest) || function (s, e) {
     return t;
 };
 import Reconciler from 'react-reconciler';
+import { createContext, useContext, useEffect } from 'react';
 import { DefaultEventPriority, } from 'react-reconciler/constants.js';
 import { Container, Input, Minitel, Paragraph, Scrollable, TextNode, XJoin, YJoin, ZJoin } from 'minitel-standalone';
 const elements = {
@@ -104,16 +105,25 @@ const MiniRenderer = Reconciler({
     },
     detachDeletedInstance(node) { }
 });
+const minitelContext = createContext(undefined);
 export const render = (reactElement, rootEl, callback) => {
     // Create a root Container if it doesnt exist
     if (!rootEl._rootContainer) {
         rootEl._rootContainer = MiniRenderer.createContainer(rootEl, 0, null, true, null, '', () => { }, null);
     }
+    const contextProvider = minitelContext.Provider({ children: [reactElement], value: rootEl });
     // update the root Container
-    MiniRenderer.updateContainer(reactElement, rootEl._rootContainer, null, callback);
+    MiniRenderer.updateContainer(contextProvider, rootEl._rootContainer, null, callback);
     return (() => {
         rootEl.unmountWrapper();
         MiniRenderer.updateContainer(null, rootEl._rootContainer, null, callback);
     });
 };
+export function useKeyboard(callback) {
+    useEffect(() => {
+        const minitel = useContext(minitelContext);
+        minitel.on('key', callback);
+        return () => void minitel.off('key', callback);
+    });
+}
 export { Minitel };

@@ -1,4 +1,5 @@
 import Reconciler from 'react-reconciler';
+import { createContext, useContext, useEffect } from 'react';
 import { MinitelObjectAttributes } from 'minitel-standalone/dist/types.js';
 
 import {
@@ -119,19 +120,31 @@ const MiniRenderer = Reconciler<
     detachDeletedInstance(node) {}
 });
 
+const minitelContext = createContext<Minitel>(undefined as unknown as Minitel);
+
 export const render = (reactElement: React.ReactNode, rootEl: Minitel, callback?: (() => {})) => {
     // Create a root Container if it doesnt exist
     if (!rootEl._rootContainer) {
         rootEl._rootContainer = MiniRenderer.createContainer(rootEl, 0, null, true, null, '', () => {}, null);
     }
 
+    const contextProvider = minitelContext.Provider({ children: [reactElement], value: rootEl });
+
     // update the root Container
-    MiniRenderer.updateContainer(reactElement, rootEl._rootContainer, null, callback);
+    MiniRenderer.updateContainer(contextProvider, rootEl._rootContainer, null, callback);
 
     return (() => {
         rootEl.unmountWrapper();
         MiniRenderer.updateContainer(null, rootEl._rootContainer, null, callback);
     });
 };
+
+export function useKeyboard(callback: (arg0: string) => any) {
+    useEffect(() => {
+        const minitel = useContext(minitelContext);
+        minitel.on('key', callback);
+        return () => void minitel.off('key', callback);
+    });
+}
 
 export { Minitel };
