@@ -12,7 +12,7 @@ var __rest = (this && this.__rest) || function (s, e) {
 import Reconciler from 'react-reconciler';
 import { createContext, useContext, useEffect } from 'react';
 import { DefaultEventPriority, } from 'react-reconciler/constants.js';
-import { Container, Input, Minitel, Paragraph, Scrollable, TextNode, XJoin, YJoin, ZJoin } from 'minitel-standalone';
+import { Container, Input, Minitel, Paragraph, Scrollable, Span, TextNode, XJoin, YJoin, ZJoin } from 'minitel-standalone';
 const elements = {
     para: Paragraph,
     yjoin: YJoin,
@@ -20,6 +20,7 @@ const elements = {
     cont: Container,
     zjoin: ZJoin,
     input: Input,
+    span: Span,
     scroll: Scrollable,
 };
 let lastImmediate = null;

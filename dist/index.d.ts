@@ -18,6 +18,7 @@ declare module 'react' {
             para: MiniProps<MinitelObjectAttributes>;
             cont: MiniProps<MinitelObjectAttributes>;
             input: MiniProps<InputAttributes>;
+            span: MiniProps<MinitelObjectAttributes>;
             scroll: MiniProps<ScrollableAttributes>;
         }
     }

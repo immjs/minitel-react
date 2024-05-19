@@ -5,7 +5,7 @@ import { MinitelObjectAttributes } from 'minitel-standalone/dist/types.js';
 import {
     DefaultEventPriority,
 } from 'react-reconciler/constants.js';
-import { Container, Input, InputAttributes, Minitel, Paragraph, Scrollable, ScrollableAttributes, TextNode, XJoin, XJoinAttributes, YJoin, YJoinAttributes, ZJoin, ZJoinAttributes } from 'minitel-standalone';
+import { Container, Input, InputAttributes, Minitel, Paragraph, Scrollable, ScrollableAttributes, Span, TextNode, XJoin, XJoinAttributes, YJoin, YJoinAttributes, ZJoin, ZJoinAttributes } from 'minitel-standalone';
 import { MinitelObject } from 'minitel-standalone/dist/abstract/minitelobject.js';
 
 const elements = {
@@ -15,6 +15,7 @@ const elements = {
     cont: Container,
     zjoin: ZJoin,
     input: Input,
+    span: Span,
     scroll: Scrollable,
 };
 
@@ -162,6 +163,7 @@ declare module 'react' {
             para: MiniProps<MinitelObjectAttributes>;
             cont: MiniProps<MinitelObjectAttributes>;
             input: MiniProps<InputAttributes>;
+            span: MiniProps<MinitelObjectAttributes>;
             scroll: MiniProps<ScrollableAttributes>;
         }
     }
