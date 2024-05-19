@@ -9,6 +9,7 @@ var __rest = (this && this.__rest) || function (s, e) {
         }
     return t;
 };
+import { jsx as _jsx } from "react/jsx-runtime";
 import Reconciler from 'react-reconciler';
 import { createContext, useContext, useEffect } from 'react';
 import { DefaultEventPriority, } from 'react-reconciler/constants.js';
@@ -112,7 +113,7 @@ export const render = (reactElement, rootEl, callback) => {
     if (!rootEl._rootContainer) {
         rootEl._rootContainer = MiniRenderer.createContainer(rootEl, 0, null, true, null, '', () => { }, null);
     }
-    const contextProvider = minitelContext.Provider({ children: [reactElement], value: rootEl });
+    const contextProvider = _jsx(minitelContext.Provider, { value: rootEl, children: reactElement });
     // update the root Container
     MiniRenderer.updateContainer(contextProvider, rootEl._rootContainer, null, callback);
     return (() => {

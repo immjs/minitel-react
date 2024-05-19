@@ -129,7 +129,7 @@ export const render = (reactElement: React.ReactNode, rootEl: Minitel, callback?
         rootEl._rootContainer = MiniRenderer.createContainer(rootEl, 0, null, true, null, '', () => {}, null);
     }
 
-    const contextProvider = minitelContext.Provider({ children: [reactElement], value: rootEl });
+    const contextProvider = <minitelContext.Provider value={rootEl}>{reactElement}</minitelContext.Provider>;
 
     // update the root Container
     MiniRenderer.updateContainer(contextProvider, rootEl._rootContainer, null, callback);
