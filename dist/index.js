@@ -122,8 +122,8 @@ export const render = (reactElement, rootEl, callback) => {
     });
 };
 export function useKeyboard(callback) {
+    const minitel = useContext(minitelContext);
     useEffect(() => {
-        const minitel = useContext(minitelContext);
         minitel.on('key', callback);
         return () => void minitel.off('key', callback);
     });
