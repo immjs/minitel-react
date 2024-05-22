@@ -1,6 +1,7 @@
-import { jsx as _jsx } from "react/jsx-runtime";
+import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { render, Minitel } from '../index.js';
 import { WebSocketServer, createWebSocketStream } from 'ws';
+import { useRef, useState } from 'react';
 import { Duplex } from 'stream';
 const wss = new WebSocketServer({ port: 8080 });
 function App() {
@@ -53,7 +54,11 @@ function App() {
     //         </zjoin>
     //     </yjoin>
     // );
-    return _jsx("yjoin", { children: _jsx("input", { multiline: true, flexGrow: true }) });
+    const [stuff, setStuff] = useState('');
+    const paraElm = useRef(null);
+    return (_jsxs("zjoin", { children: [_jsx("input", { autofocus: true, multiline: true, onScroll: (sD) => {
+                    paraElm.current.attributes.pad = [-sD[0], 0, 0, -sD[1]];
+                }, onChange: (txt) => { setStuff(txt); }, fillChar: '\\x09', visible: false }), _jsx("cont", { fillChar: '.', children: _jsx("para", { flexGrow: true, ref: paraElm, children: stuff }) })] }));
 }
 ;
 class DuplexBridge extends Duplex {

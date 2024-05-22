@@ -1,5 +1,5 @@
 import Reconciler, { FiberRoot } from 'react-reconciler';
-import { createContext, useContext, useEffect } from 'react';
+import { Ref, RefObject, createContext, useContext, useEffect } from 'react';
 import { MinitelObjectAttributes } from 'minitel-standalone/dist/types.js';
 
 import {
@@ -152,7 +152,7 @@ export { Minitel };
 
 // idk im not skilled enough in TS so ill just slide this in here (plz js work)
 
-type MiniProps<T> = Partial<T & { children: React.ReactNode | React.ReactNode[]; key: React.Key }>;
+type MiniProps<T> = Partial<T & { children: React.ReactNode | React.ReactNode[]; key: React.Key; ref: RefObject<MinitelObject> }>;
 
 declare module 'react' {
     namespace JSX {

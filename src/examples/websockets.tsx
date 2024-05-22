@@ -1,8 +1,9 @@
 import { render, Minitel } from '../index.js';
 import { WebSocket, WebSocketServer, createWebSocketStream } from 'ws';
 
-import React from 'react';
+import React, { useRef, useState } from 'react';
 import { Duplex, DuplexOptions } from 'stream';
+import { Paragraph, Scrollable } from 'minitel-standalone';
 
 const wss = new WebSocketServer({ port: 8080 });
 
@@ -56,7 +57,18 @@ function App() {
     //         </zjoin>
     //     </yjoin>
     // );
-    return <yjoin><input multiline flexGrow /></yjoin>
+    const [stuff, setStuff] = useState('');
+
+    const paraElm = useRef<Paragraph>(null);
+
+    return (
+        <zjoin>
+            <input autofocus multiline onScroll={(sD) => {
+                paraElm.current!.attributes.pad = [-sD[0], 0, 0, -sD[1]];
+            }} onChange={(txt) => {setStuff(txt)}} fillChar='\x09' visible={false} />
+            <cont fillChar='.'><para flexGrow ref={paraElm}>{stuff}</para></cont>
+        </zjoin>
+    );
 };
 
 class DuplexBridge extends Duplex { // not nice making me do this, couldve been prevented with a simple event before CLOSING ready state
