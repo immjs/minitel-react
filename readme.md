@@ -68,8 +68,10 @@ Also: an example with websockets, miedit minitel (You may need to clone [miedit]
 |width                  |`number`              |The desired width of the element                                                                        |
 |height                 |`number`              |The desired height of the element                                                                       |
 |wrap                   |`string`              |The behaviour of text overflowing                                                                       |
+|ref                    |`RefObject`           |The ref which should store the underlying document. The relevant classes are in [`minitel-standalone`](https://github.com/immjs/minitel-standalone) (docs to be written) |
 |textAlign              |`string`              |The way text should be aligned (start, middle, or end)                                                  |
-|flexGrow               |`boolean` or `string` |The flexGrow factor to be applied (refer to CSS flex-grow)                                              |
+|flexGrow               |`boolean` or `number` |The flexGrow factor to be applied (refer to CSS flex-grow). `true` is interpreted as `1`                |
+|visible                |`boolean`             |If `false`, the element will only be displayed as a grid of its `fillChar`s                             |
 
 ### new Minitel
 |Argument (in order)|Type      |Description                                       |
@@ -83,7 +85,7 @@ Also: an example with websockets, miedit minitel (You may need to clone [miedit]
 |statusBar|`boolean` |Whether to consider the first line of the render as the status bar|
 |localEcho|`boolean` |Whether to keep local echo (écho local) enabled                   |
 
-### &lt;vjoin&gt;
+### &lt;yjoin&gt;
 Will vertically join all children
 |Attribute            |Type                  |Description                                                                             |
 |---------------------|----------------------|-----------------------------------------------------------------|
@@ -91,7 +93,7 @@ Will vertically join all children
 |widthAlign           |`string`              |The way to align along the x axis (start, middle, end or stretch)|
 |heightAlign          |`string`              |The way to align along the y axis (start, middle or end)         |
 
-### &lt;hjoin&gt;
+### &lt;xjoin&gt;
 Will horizontally join all children
 |Attribute            |Type                  |Description                                                      |
 |---------------------|----------------------|-----------------------------------------------------------------|
@@ -105,6 +107,9 @@ Will be an input
 |---------------------|----------------------|-----------------------------------------------------------------|
 |autofocus            |`boolean`             |Whether or not to autofocus on the input                         |
 |type                 |`string`              |The type of input (for now, text or password)                    |
+|multiline            |`boolean`             |Whether or not the input should be multiline                     |
+|onChange             |`function(value)`     |A function to be called whenever the input is changed            |
+|onScroll             |`function([dy, dx])`  |A function to be called whenever the input is scolled            |
 
 ### &lt;para&gt;
 Will show text
@@ -114,16 +119,20 @@ Will allow scrolling (the element needs to be focused to be scrolled upon)
 
 #### Attributes
 
-| Attribute            | Type                                | Description                                                                                       |
-|----------------------|-------------------------------------|---------------------------------------------------------------------------------------------------|
-| overflowX            | `'scroll' \| 'pad' \| 'auto' \| 'hidden'` | Horizontal overflow behavior: 'scroll' for scrollbar, 'pad' for padding, 'auto' for automatic, 'hidden' for hidden overflow. |
-| overflowY            | `'scroll' \| 'pad' \| 'auto' \| 'hidden'` | Vertical overflow behavior: 'scroll' for scrollbar, 'pad' for padding, 'auto' for automatic, 'hidden' for hidden overflow.   |
-| autofocus            | `false`                             | Whether autofocus is enabled for the scrollable area.                                             |
-| scrollbarColor       | `number`                            | The color code for the scrollbar.                                                                  |
-| scrollbarBackColor   | `number`                            | The color code for the scrollbar background.                                                       |
-| blinkPeriod          | `number`                            | The blinking period for the scrollbar (in milliseconds).                                          |
+| Attribute            | Type                                | Description                                                            |
+|----------------------|-------------------------------------|------------------------------------------------------------------------|
+| overflowX            | `string`                            | Horizontal overflow behavior: refer to description under the table     |
+| overflowY            | `string`                            | Vertical overflow behavior: refer to description under the table       |
+| autofocus            | `false`                             | Whether autofocus is enabled for the scrollable area.                  |
+| disabled             | `boolean`                           | Whether this element is unfocusable                                    |
+| scrollbarColor       | `number`                            | The color code for the scrollbar.                                      |
+| scrollbarBackColor   | `number`                            | The color code for the scrollbar background.                           |
+| blinkPeriod          | `number`                            | The blinking period for the scrollbar (in milliseconds).               |
+| onScroll             | `function([dy, dx])`                | A function to be called whenever the scroll is scolled                 |
 
-`auto` will hide the scrollbar when possible
+
+`noscrollbar` will hide the scrollbar
+`auto` will hide the scrollbar except when the scrollable area exists (I.E. content does not fit)
 `scroll` and `pad` only differ in the case that the children already fit in the imposed area: `scroll` will show the scrollbar anyway, while `pad` will leave this space empty
 
 ### &lt;cont&gt;
