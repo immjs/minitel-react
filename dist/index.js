@@ -128,4 +128,4 @@ export function useKeyboard(callback, deps) {
         return () => void minitel.off('key', callback);
     }, deps);
 }
-export { Minitel };
+export { Minitel, minitelContext };
