@@ -1,4 +1,4 @@
-import { render, Minitel } from '../index.js';
+import { render, Minitel, useKeyboard } from '../index.js';
 import { WebSocket, WebSocketServer, createWebSocketStream } from 'ws';
 
 import React, { useRef, useState } from 'react';
@@ -61,6 +61,8 @@ function App() {
 
     const paraElm = useRef<Paragraph>(null);
 
+    useKeyboard((v) => console.log(v));
+
     return (
         <zjoin>
             <input autofocus multiline onScroll={(sD) => {
@@ -97,7 +99,7 @@ wss.on('connection', function connection(ws) {
 
     const minitel = new Minitel(bridge, { statusBar: false });
 
-    ws.on('message', (data) => console.log({ data }));
+    // ws.on('message', (data) => console.log({ data }));
 
     const derender = render(<App />, minitel);
 

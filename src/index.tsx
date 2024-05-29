@@ -1,5 +1,5 @@
 import Reconciler, { FiberRoot } from 'react-reconciler';
-import { Ref, RefObject, createContext, useContext, useEffect } from 'react';
+import { DependencyList, RefObject, createContext, useContext, useEffect } from 'react';
 import { MinitelObjectAttributes } from 'minitel-standalone/dist/types.js';
 
 import {
@@ -140,12 +140,12 @@ export const render = (reactElement: React.ReactNode, rootEl: Minitel, callback?
     });
 };
 
-export function useKeyboard(callback: (arg0: string) => any) {
+export function useKeyboard(callback: (arg0: string) => any, deps?: DependencyList) {
     const minitel = useContext(minitelContext);
     useEffect(() => {
         minitel.on('key', callback);
         return () => void minitel.off('key', callback);
-    });
+    }, deps);
 }
 
 export { Minitel };

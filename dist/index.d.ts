@@ -1,10 +1,10 @@
 import { FiberRoot } from 'react-reconciler';
-import { RefObject } from 'react';
+import { DependencyList, RefObject } from 'react';
 import { MinitelObjectAttributes } from 'minitel-standalone/dist/types.js';
 import { InputAttributes, Minitel, ScrollableAttributes, XJoinAttributes, YJoinAttributes, ZJoinAttributes } from 'minitel-standalone';
 import { MinitelObject } from 'minitel-standalone/dist/abstract/minitelobject.js';
 export declare const render: (reactElement: React.ReactNode, rootEl: Minitel, callback?: (() => {})) => () => void;
-export declare function useKeyboard(callback: (arg0: string) => any): void;
+export declare function useKeyboard(callback: (arg0: string) => any, deps?: DependencyList): void;
 export { Minitel };
 type MiniProps<T> = Partial<T & {
     children: React.ReactNode | React.ReactNode[];

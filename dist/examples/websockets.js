@@ -1,5 +1,5 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { render, Minitel } from '../index.js';
+import { render, Minitel, useKeyboard } from '../index.js';
 import { WebSocketServer, createWebSocketStream } from 'ws';
 import { useRef, useState } from 'react';
 import { Duplex } from 'stream';
@@ -56,6 +56,7 @@ function App() {
     // );
     const [stuff, setStuff] = useState('');
     const paraElm = useRef(null);
+    useKeyboard((v) => console.log(v));
     return (_jsxs("zjoin", { children: [_jsx("input", { autofocus: true, multiline: true, onScroll: (sD) => {
                     paraElm.current.attributes.pad = [-sD[0], 0, 0, -sD[1]];
                 }, onChange: (txt) => { setStuff(txt); }, fillChar: '\\x09', visible: false }), _jsx("cont", { fillChar: '.', children: _jsx("para", { flexGrow: true, ref: paraElm, children: stuff }) })] }));
@@ -83,7 +84,7 @@ class DuplexBridge extends Duplex {
 wss.on('connection', function connection(ws) {
     const bridge = new DuplexBridge(createWebSocketStream(ws, { decodeStrings: false }), ws, { decodeStrings: false });
     const minitel = new Minitel(bridge, { statusBar: false });
-    ws.on('message', (data) => console.log({ data }));
+    // ws.on('message', (data) => console.log({ data }));
     const derender = render(_jsx(App, {}), minitel);
     ws.on('close', () => {
         minitel.stream = new Duplex();

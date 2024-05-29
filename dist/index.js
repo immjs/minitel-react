@@ -121,11 +121,11 @@ export const render = (reactElement, rootEl, callback) => {
         MiniRenderer.updateContainer(null, rootEl._rootContainer, null, callback);
     });
 };
-export function useKeyboard(callback) {
+export function useKeyboard(callback, deps) {
     const minitel = useContext(minitelContext);
     useEffect(() => {
         minitel.on('key', callback);
         return () => void minitel.off('key', callback);
-    });
+    }, deps);
 }
 export { Minitel };
