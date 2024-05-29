@@ -148,7 +148,7 @@ export function useKeyboard(callback: (arg0: string) => any, deps?: DependencyLi
     }, deps);
 }
 
-export { Minitel };
+export { Minitel, minitelContext };
 
 // idk im not skilled enough in TS so ill just slide this in here (plz js work)
 
