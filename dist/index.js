@@ -14,6 +14,7 @@ import Reconciler from 'react-reconciler';
 import { createContext, useContext, useEffect } from 'react';
 import { DefaultEventPriority, } from 'react-reconciler/constants.js';
 import { Container, Input, Minitel, Paragraph, Scrollable, Span, TextNode, XJoin, YJoin, ZJoin } from 'minitel-standalone';
+import { Image } from 'minitel-mosaic';
 const elements = {
     para: Paragraph,
     yjoin: YJoin,
@@ -23,6 +24,7 @@ const elements = {
     input: Input,
     span: Span,
     scroll: Scrollable,
+    image: Image,
 };
 let lastImmediate = null;
 const MiniRenderer = Reconciler({

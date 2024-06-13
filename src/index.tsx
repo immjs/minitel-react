@@ -6,6 +6,7 @@ import {
     DefaultEventPriority,
 } from 'react-reconciler/constants.js';
 import { Container, Input, InputAttributes, Minitel, Paragraph, Scrollable, ScrollableAttributes, Span, TextNode, XJoin, XJoinAttributes, YJoin, YJoinAttributes, ZJoin, ZJoinAttributes } from 'minitel-standalone';
+import { Image, ImageAttributes } from 'minitel-mosaic';
 import { MinitelObject } from 'minitel-standalone/dist/abstract/minitelobject.js';
 
 const elements = {
@@ -17,6 +18,7 @@ const elements = {
     input: Input,
     span: Span,
     scroll: Scrollable,
+    image: Image,
 };
 
 let lastImmediate: NodeJS.Immediate | null = null;
@@ -165,6 +167,7 @@ declare module 'react' {
             input: MiniProps<InputAttributes>;
             span: MiniProps<MinitelObjectAttributes>;
             scroll: MiniProps<ScrollableAttributes>;
+            image: MiniProps<ImageAttributes>;
         }
     }
 }
