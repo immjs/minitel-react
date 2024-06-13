@@ -2,6 +2,7 @@ import { FiberRoot } from 'react-reconciler';
 import { DependencyList, RefObject } from 'react';
 import { MinitelObjectAttributes } from 'minitel-standalone/dist/types.js';
 import { InputAttributes, Minitel, ScrollableAttributes, XJoinAttributes, YJoinAttributes, ZJoinAttributes } from 'minitel-standalone';
+import { ImageAttributes } from 'minitel-mosaic';
 import { MinitelObject } from 'minitel-standalone/dist/abstract/minitelobject.js';
 declare const minitelContext: import("react").Context<Minitel>;
 export declare const render: (reactElement: React.ReactNode, rootEl: Minitel, callback?: (() => {})) => () => void;
@@ -23,6 +24,7 @@ declare module 'react' {
             input: MiniProps<InputAttributes>;
             span: MiniProps<MinitelObjectAttributes>;
             scroll: MiniProps<ScrollableAttributes>;
+            image: MiniProps<ImageAttributes>;
         }
     }
 }
