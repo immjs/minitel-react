@@ -5,7 +5,7 @@ import { InputAttributes, Minitel, ScrollableAttributes, XJoinAttributes, YJoinA
 import { ImageAttributes } from 'minitel-mosaic';
 import { MinitelObject } from 'minitel-standalone/dist/abstract/minitelobject.js';
 declare const minitelContext: import("react").Context<Minitel>;
-export declare const render: (reactElement: React.ReactNode, rootEl: Minitel, callback?: (() => {})) => () => void;
+export declare const render: (reactElement: React.ReactNode, rootEl: Minitel, callback?: (() => {})) => void;
 export declare function useKeyboard(callback: (arg0: string) => any, deps?: DependencyList): void;
 export { Minitel, minitelContext };
 type MiniProps<T> = Partial<T & {

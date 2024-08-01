@@ -8,6 +8,7 @@ import {
 import { Container, Input, InputAttributes, Minitel, Paragraph, Scrollable, ScrollableAttributes, Span, TextNode, XJoin, XJoinAttributes, YJoin, YJoinAttributes, ZJoin, ZJoinAttributes } from 'minitel-standalone';
 import { Image, ImageAttributes } from 'minitel-mosaic';
 import { MinitelObject } from 'minitel-standalone/dist/abstract/minitelobject.js';
+import { Duplex } from 'node:stream';
 
 const elements = {
     para: Paragraph,
@@ -136,10 +137,13 @@ export const render = (reactElement: React.ReactNode, rootEl: Minitel, callback?
     // update the root Container
     MiniRenderer.updateContainer(contextProvider, rootEl._rootContainer, null, callback);
 
-    return (() => {
+    const unrender = () => {
         rootEl.unmountWrapper();
         MiniRenderer.updateContainer(null, rootEl._rootContainer, null, callback);
-    });
+        rootEl.stream = new Duplex();
+    };
+
+    rootEl.stream.on('close', unrender);
 };
 
 export function useKeyboard(callback: (arg0: string) => any, deps?: DependencyList) {

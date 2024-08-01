@@ -15,6 +15,7 @@ import { createContext, useContext, useEffect } from 'react';
 import { DefaultEventPriority, } from 'react-reconciler/constants.js';
 import { Container, Input, Minitel, Paragraph, Scrollable, Span, TextNode, XJoin, YJoin, ZJoin } from 'minitel-standalone';
 import { Image } from 'minitel-mosaic';
+import { Duplex } from 'node:stream';
 const elements = {
     para: Paragraph,
     yjoin: YJoin,
@@ -118,10 +119,12 @@ export const render = (reactElement, rootEl, callback) => {
     const contextProvider = _jsx(minitelContext.Provider, { value: rootEl, children: reactElement });
     // update the root Container
     MiniRenderer.updateContainer(contextProvider, rootEl._rootContainer, null, callback);
-    return (() => {
+    const unrender = () => {
         rootEl.unmountWrapper();
         MiniRenderer.updateContainer(null, rootEl._rootContainer, null, callback);
-    });
+        rootEl.stream = new Duplex();
+    };
+    rootEl.stream.on('close', unrender);
 };
 export function useKeyboard(callback, deps) {
     const minitel = useContext(minitelContext);
