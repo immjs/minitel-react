@@ -5,7 +5,7 @@ import { MinitelObjectAttributes } from 'minitel-standalone/dist/types.js';
 import {
     DefaultEventPriority,
 } from 'react-reconciler/constants.js';
-import { Container, Input, InputAttributes, Minitel, Paragraph, Scrollable, ScrollableAttributes, Span, TextNode, XJoin, XJoinAttributes, YJoin, YJoinAttributes, ZJoin, ZJoinAttributes } from 'minitel-standalone';
+import { Container, Focusable, FocusableAttributes, Input, InputAttributes, Minitel, Paragraph, Scrollable, ScrollableAttributes, Span, TextNode, XJoin, XJoinAttributes, YJoin, YJoinAttributes, ZJoin, ZJoinAttributes } from 'minitel-standalone';
 import { Image, ImageAttributes } from 'minitel-mosaic';
 import { MinitelObject } from 'minitel-standalone/dist/abstract/minitelobject.js';
 import { Duplex } from 'node:stream';
@@ -19,6 +19,7 @@ const elements = {
     input: Input,
     span: Span,
     scroll: Scrollable,
+    focus: Focusable,
     image: Image,
 };
 
@@ -171,6 +172,7 @@ declare module 'react' {
             input: MiniProps<InputAttributes>;
             span: MiniProps<MinitelObjectAttributes>;
             scroll: MiniProps<ScrollableAttributes>;
+            focus: MiniProps<FocusableAttributes>;
             image: MiniProps<ImageAttributes>;
         }
     }
