@@ -13,7 +13,7 @@ import { jsx as _jsx } from "react/jsx-runtime";
 import Reconciler from 'react-reconciler';
 import { createContext, useContext, useEffect } from 'react';
 import { DefaultEventPriority, } from 'react-reconciler/constants.js';
-import { Container, Input, Minitel, Paragraph, Scrollable, Span, TextNode, XJoin, YJoin, ZJoin } from 'minitel-standalone';
+import { Container, Focusable, Input, Minitel, Paragraph, Scrollable, Span, TextNode, XJoin, YJoin, ZJoin } from 'minitel-standalone';
 import { Image } from 'minitel-mosaic';
 import { Duplex } from 'node:stream';
 const elements = {
@@ -25,6 +25,7 @@ const elements = {
     input: Input,
     span: Span,
     scroll: Scrollable,
+    focus: Focusable,
     image: Image,
 };
 let lastImmediate = null;
