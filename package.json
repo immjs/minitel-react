@@ -1,6 +1,6 @@
 {
   "name": "minitel-react",
-  "version": "5.2.0",
+  "version": "5.2.1",
   "description": "A react renderer for the french Minitel",
   "main": "dist/index.js",
   "type": "module",
