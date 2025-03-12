@@ -11,16 +11,16 @@ import { MinitelObject } from 'minitel-standalone/dist/abstract/minitelobject.js
 import { Duplex } from 'node:stream';
 
 const elements = {
-    para: Paragraph,
-    yjoin: YJoin,
-    xjoin: XJoin,
-    cont: Container,
-    zjoin: ZJoin,
-    input: Input,
-    span: Span,
-    scroll: Scrollable,
-    focus: Focusable,
-    image: Image,
+    'mt-para': Paragraph,
+    'mt-yjoin': YJoin,
+    'mt-xjoin': XJoin,
+    'mt-cont': Container,
+    'mt-zjoin': ZJoin,
+    'mt-input': Input,
+    'mt-span': Span,
+    'mt-scroll': Scrollable,
+    'mt-focus': Focusable,
+    'mt-image': Image,
 };
 
 let lastImmediate: NodeJS.Immediate | null = null;
@@ -164,16 +164,16 @@ type MiniProps<T> = Partial<T & { children: React.ReactNode | React.ReactNode[];
 declare module 'react' {
     namespace JSX {
         interface IntrinsicElements {
-            xjoin: MiniProps<XJoinAttributes>;
-            yjoin: MiniProps<YJoinAttributes>;
-            zjoin: MiniProps<ZJoinAttributes>;
-            para: MiniProps<MinitelObjectAttributes>;
-            cont: MiniProps<MinitelObjectAttributes>;
-            input: MiniProps<InputAttributes>;
-            span: MiniProps<MinitelObjectAttributes>;
-            scroll: MiniProps<ScrollableAttributes>;
-            focus: MiniProps<FocusableAttributes>;
-            image: MiniProps<ImageAttributes>;
+            'mt-xjoin': MiniProps<XJoinAttributes>;
+            'mt-yjoin': MiniProps<YJoinAttributes>;
+            'mt-zjoin': MiniProps<ZJoinAttributes>;
+            'mt-para': MiniProps<MinitelObjectAttributes>;
+            'mt-cont': MiniProps<MinitelObjectAttributes>;
+            'mt-input': MiniProps<InputAttributes>;
+            'mt-span': MiniProps<MinitelObjectAttributes>;
+            'mt-scroll': MiniProps<ScrollableAttributes>;
+            'mt-focus': MiniProps<FocusableAttributes>;
+            'mt-image': MiniProps<ImageAttributes>;
         }
     }
 }

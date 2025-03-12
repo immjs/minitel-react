@@ -8,9 +8,9 @@ function App() {
     const [stuff, setStuff] = useState('');
     const paraElm = useRef(null);
     useKeyboard((v) => console.log(v));
-    return (_jsxs("zjoin", { children: [_jsx("input", { autofocus: true, multiline: true, onScroll: (sD) => {
+    return (_jsxs("mt-zjoin", { children: [_jsx("mt-input", { autofocus: true, multiline: true, onScroll: (sD) => {
                     paraElm.current.attributes.pad = [-sD[0], 0, 0, -sD[1]];
-                }, onChange: (txt) => { setStuff(txt); }, fillChar: '\\x09', visible: false }), _jsx("cont", { fillChar: '.', children: _jsx("para", { flexGrow: true, ref: paraElm, children: stuff }) })] }));
+                }, onChange: (txt) => { setStuff(txt); }, fillChar: '\\x09', visible: false }), _jsx("mt-cont", { fillChar: '.', children: _jsx("mt-para", { flexGrow: true, ref: paraElm, children: stuff }) })] }));
 }
 ;
 wss.on('connection', function connection(ws) {

@@ -15,12 +15,12 @@ function App() {
     useKeyboard((v) => console.log(v));
 
     return (
-        <zjoin>
-            <input autofocus multiline onScroll={(sD) => {
+        <mt-zjoin>
+            <mt-input autofocus multiline onScroll={(sD) => {
                 paraElm.current!.attributes.pad = [-sD[0], 0, 0, -sD[1]];
             }} onChange={(txt) => {setStuff(txt)}} fillChar='\x09' visible={false} />
-            <cont fillChar='.'><para flexGrow ref={paraElm}>{stuff}</para></cont>
-        </zjoin>
+            <mt-cont fillChar='.'><mt-para flexGrow ref={paraElm}>{stuff}</mt-para></mt-cont>
+        </mt-zjoin>
     );
 };
 

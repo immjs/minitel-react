@@ -17,16 +17,16 @@ import { Container, Focusable, Input, Minitel, Paragraph, Scrollable, Span, Text
 import { Image } from 'minitel-mosaic';
 import { Duplex } from 'node:stream';
 const elements = {
-    para: Paragraph,
-    yjoin: YJoin,
-    xjoin: XJoin,
-    cont: Container,
-    zjoin: ZJoin,
-    input: Input,
-    span: Span,
-    scroll: Scrollable,
-    focus: Focusable,
-    image: Image,
+    'mt-para': Paragraph,
+    'mt-yjoin': YJoin,
+    'mt-xjoin': XJoin,
+    'mt-cont': Container,
+    'mt-zjoin': ZJoin,
+    'mt-input': Input,
+    'mt-span': Span,
+    'mt-scroll': Scrollable,
+    'mt-focus': Focusable,
+    'mt-image': Image,
 };
 let lastImmediate = null;
 const MiniRenderer = Reconciler({
