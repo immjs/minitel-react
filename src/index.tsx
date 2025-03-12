@@ -5,7 +5,7 @@ import { MinitelObjectAttributes } from 'minitel-standalone/dist/types.js';
 import {
     DefaultEventPriority,
 } from 'react-reconciler/constants.js';
-import { Container, Focusable, FocusableAttributes, Input, InputAttributes, Minitel, Paragraph, Scrollable, ScrollableAttributes, Span, TextNode, XJoin, XJoinAttributes, YJoin, YJoinAttributes, ZJoin, ZJoinAttributes } from 'minitel-standalone';
+import { Container, Display, DisplayAttributes, Focusable, FocusableAttributes, Input, InputAttributes, Minitel, Paragraph, Scrollable, ScrollableAttributes, Span, TextNode, XJoin, XJoinAttributes, YJoin, YJoinAttributes, ZJoin, ZJoinAttributes } from 'minitel-standalone';
 import { Image, ImageAttributes } from 'minitel-mosaic';
 import { MinitelObject } from 'minitel-standalone/dist/abstract/minitelobject.js';
 import { Duplex } from 'node:stream';
@@ -15,6 +15,7 @@ const elements = {
     'mt-yjoin': YJoin,
     'mt-xjoin': XJoin,
     'mt-cont': Container,
+    'mt-disp': Display,
     'mt-zjoin': ZJoin,
     'mt-input': Input,
     'mt-span': Span,
@@ -169,6 +170,7 @@ declare module 'react' {
             'mt-zjoin': MiniProps<ZJoinAttributes>;
             'mt-para': MiniProps<MinitelObjectAttributes>;
             'mt-cont': MiniProps<MinitelObjectAttributes>;
+            'mt-disp': MiniProps<DisplayAttributes>;
             'mt-input': MiniProps<InputAttributes>;
             'mt-span': MiniProps<MinitelObjectAttributes>;
             'mt-scroll': MiniProps<ScrollableAttributes>;
