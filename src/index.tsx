@@ -6,7 +6,6 @@ import {
     DefaultEventPriority,
 } from 'react-reconciler/constants.js';
 import { Container, Display, DisplayAttributes, Focusable, FocusableAttributes, Input, InputAttributes, Minitel, Paragraph, Scrollable, ScrollableAttributes, Span, TextNode, XJoin, XJoinAttributes, YJoin, YJoinAttributes, ZJoin, ZJoinAttributes } from 'minitel-standalone';
-import { Image, ImageAttributes } from 'minitel-mosaic';
 import { MinitelObject } from 'minitel-standalone/dist/abstract/minitelobject.js';
 import { Duplex } from 'node:stream';
 
@@ -21,7 +20,6 @@ const elements = {
     'mt-span': Span,
     'mt-scroll': Scrollable,
     'mt-focus': Focusable,
-    'mt-image': Image,
 };
 
 let lastImmediate: NodeJS.Immediate | null = null;
@@ -175,7 +173,6 @@ declare module 'react' {
             'mt-span': MiniProps<MinitelObjectAttributes>;
             'mt-scroll': MiniProps<ScrollableAttributes>;
             'mt-focus': MiniProps<FocusableAttributes>;
-            'mt-image': MiniProps<ImageAttributes>;
         }
     }
 }

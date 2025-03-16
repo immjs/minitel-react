@@ -25,7 +25,6 @@
   },
   "homepage": "https://github.com/immjs/minitel-react#readme",
   "dependencies": {
-    "minitel-mosaic": "^3.4.2",
     "minitel-standalone": "^2.6.0",
     "react": "^18.3.1",
     "react-reconciler": "^0.29.0",
